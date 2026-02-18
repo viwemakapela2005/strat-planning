@@ -11,7 +11,7 @@ export default function EventDashboard() {
   const [question, setQuestion] = useState("");
 
   // --- CONFIGURATION ---
-  const YOUR_EMAIL = "admin@pscbc.org.za"; // REPLACE WITH YOUR ACTUAL EMAIL
+  const YOUR_EMAIL = "viwem@pscbc.org.za"; // REPLACE WITH YOUR ACTUAL EMAIL
   const EVENT_SUBJECT = "PSCBC Strat Planning Question";
 
   const toggleTab = (tab: string) => {
