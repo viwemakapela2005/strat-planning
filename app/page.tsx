@@ -103,7 +103,7 @@ export default function EventDashboard() {
               </p>
               
               <div className="space-y-3">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Event File:</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Programme:</p>
                 <a 
                   href="/docs/programme.pdf" 
                   download="PSCBC_Programme_2026.pdf" 
