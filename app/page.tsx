@@ -91,7 +91,7 @@ export default function EventDashboard() {
                 submit questions, and stay updated with live announcements.
               </p>
               <a 
-                href="/programme.pdf" 
+                href="programme.pdf" 
                 download 
                 className="flex items-center justify-center gap-4 bg-slate-900 text-white px-8 py-5 rounded-2xl hover:bg-black hover:scale-[1.02] transition-all font-black text-base md:text-xl shadow-xl shadow-black/30 w-full"
               >
