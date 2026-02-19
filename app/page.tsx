@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState } from 'react';
+// Added all missing icons to the import list
 import { 
   FileText, Info, Shirt, Bell, 
-  MessageSquare, Presentation, Download, Clock, ChevronDown, Send, Mail
+  Download, ChevronDown, Send, Mail
 } from 'lucide-react';
 
 export default function EventDashboard() {
@@ -11,8 +12,16 @@ export default function EventDashboard() {
   const [question, setQuestion] = useState("");
 
   // --- CONFIGURATION ---
-  const YOUR_EMAIL = "viwem@pscbc.org.za"; // REPLACE WITH YOUR ACTUAL EMAIL
+  const YOUR_EMAIL = "viwem@pscbc.org.za";
   const EVENT_SUBJECT = "PSCBC Strat Planning Question";
+
+  // --- DOCUMENTS LIBRARY ---
+  // Just add new items here as they come in
+  const DOCUMENTS_LIST = [
+    { name: "Operational Report", fileName: "operational-report.pdf", size: "1.2 MB" },
+    { name: "Budget Overview 2026", fileName: "budget-2026.pdf", size: "850 KB" },
+    { name: "Strategic Roadmap", fileName: "roadmap.pdf", size: "2.4 MB" },
+  ];
 
   const toggleTab = (tab: string) => {
     setActiveTab(activeTab === tab ? null : tab);
@@ -20,21 +29,17 @@ export default function EventDashboard() {
 
   const handleEmailSend = () => {
     if (!question.trim()) return alert("Please type a question first!");
-    
-    // Formats the email link
     const subject = encodeURIComponent(EVENT_SUBJECT);
     const body = encodeURIComponent(question);
     const mailtoUrl = `mailto:${YOUR_EMAIL}?subject=${subject}&body=${body}`;
-    
-    // Opens the user's email app
     window.location.href = mailtoUrl;
-    setQuestion(""); // Clears the box
+    setQuestion("");
   };
 
   return (
     <div className="min-h-screen text-slate-900 pb-20 font-sans relative overflow-x-hidden text-left">
       
-      {/* 1. BACKGROUND IMAGE LAYER */}
+      {/* BACKGROUND LAYER */}
       <div 
         className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('photo.jpeg')" }}
@@ -42,14 +47,13 @@ export default function EventDashboard() {
         <div className="absolute inset-0 bg-slate-950/65 backdrop-blur-[3px]"></div>
       </div>
 
-      {/* 2. CONTENT LAYER */}
       <div className="relative z-10">
         
-        {/* PUSH ANNOUNCEMENTS */}
+        {/* TOP BAR */}
         <div className="bg-indigo-700/90 backdrop-blur-xl text-white px-4 py-3 flex items-center justify-center shadow-2xl sticky top-0 z-50 border-b border-white/10">
           <div className="flex items-center gap-3">
             <Bell size={16} className="animate-bounce text-amber-300" />
-            <span className="text-[11px] md:text-sm font-bold uppercase tracking-tight text-center">
+            <span className="text-[11px] md:text-sm font-bold uppercase tracking-tight">
               Strategic Planning Session is Live
             </span>
           </div>
@@ -57,14 +61,15 @@ export default function EventDashboard() {
 
         <main className="max-w-4xl mx-auto px-4 md:px-6 mt-8 md:mt-12">
           
-          {/* HEADER SECTION WITH LOGO */}
+          {/* HEADER */}
           <header className="mb-10 text-center flex flex-col items-center justify-center gap-4">
             <div className="flex items-center justify-center gap-4 flex-wrap">
               <img 
                 src="/logo.png" 
                 alt="Logo" 
                 className="h-16 md:h-24 w-auto drop-shadow-2xl object-contain"
-                onError={(e) => { (e.target as any).style.display = 'none'; }} 
+                // Fixed TypeScript error for onError
+                onError={(e) => { (e.currentTarget.style.display = 'none'); }} 
               />
               <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-white uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
                 PSCBC EVENTS
@@ -72,7 +77,7 @@ export default function EventDashboard() {
             </div>
             
             <div className="inline-block px-5 py-1.5 bg-indigo-600/40 backdrop-blur-md rounded-xl border border-indigo-400/30">
-              <p className="text-indigo-100 text-lg md:text-2xl font-black tracking-[0.25em] uppercase italic text-center">
+              <p className="text-indigo-100 text-lg md:text-2xl font-black tracking-[0.25em] uppercase italic">
                 Strategic Planning Session
               </p>
             </div>
@@ -86,28 +91,27 @@ export default function EventDashboard() {
                 <Info size={28} />
                 <h2 className="text-2xl md:text-3xl font-black uppercase italic">About the Event</h2>
               </div>
-              <p className="text-slate-700 leading-relaxed mb-8 font-semibold text-base md:text-lg">
+              <p className="text-slate-700 leading-relaxed mb-8 font-semibold text-base md:text-lg text-left">
                 Welcome to the official 2026 PSCBC Strategic Planning Session. Access your operational reports, 
                 submit questions, and stay updated with live announcements.
               </p>
+              
               <a 
-  href="/docs/programme.pdf" 
-  target="_blank" 
-  rel="noopener noreferrer"
-  className="flex items-center justify-between p-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl transition-all"
->
-  <div className="flex items-center gap-3">
-    <div className="p-2 bg-blue-500/20 rounded-lg">
-      {/* This is just a placeholder for an icon, you can use a Lucide icon here */}
-      <span className="text-blue-400">📄</span>
-    </div>
-    <div>
-      <p className="font-semibold text-white">Event Programme</p>
-      <p className="text-xs text-gray-400">PDF • 2MB</p>
-    </div>
-  </div>
-  <span className="text-gray-500">→</span>
-</a>
+                href="/docs/programme.pdf" 
+                download="PSCBC_Programme_2026.pdf" 
+                className="flex items-center justify-between p-5 bg-slate-900 hover:bg-indigo-700 rounded-2xl transition-all group"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-2 bg-white/10 rounded-lg text-white">
+                    <FileText size={24} />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-bold text-white uppercase tracking-tight">Download Event Programme</p>
+                    <p className="text-xs text-indigo-300">PDF • Click to Save</p>
+                  </div>
+                </div>
+                <Download size={24} className="text-white group-hover:translate-y-1 transition-transform" />
+              </a>
             </section>
 
             {/* SHIRT COLOURS */}
@@ -117,18 +121,18 @@ export default function EventDashboard() {
                 <h2 className="text-xl md:text-2xl font-black uppercase italic tracking-tighter text-slate-900">Shirt Colours</h2>
               </div>
               <div className="grid grid-cols-3 gap-3 md:gap-6 text-center">
-                <div className="p-3 md:p-6 rounded-3xl bg-blue-50/80 border border-blue-100 shadow-sm">
-                  <p className="text-[10px] md:text-sm font-black text-blue-700 uppercase mb-3 tracking-widest text-center">Tue</p>
+                <div className="p-3 md:p-6 rounded-3xl bg-blue-50/80 border border-blue-100">
+                  <p className="text-[10px] md:text-sm font-black text-blue-700 uppercase mb-3 tracking-widest">Tue</p>
                   <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-600 rounded-full shadow-lg border-4 border-white mx-auto"></div>
                   <p className="font-black text-blue-900 text-xs md:text-lg mt-3 uppercase">Blue</p>
                 </div>
-                <div className="p-3 md:p-6 rounded-3xl bg-slate-50/80 border border-slate-200 shadow-sm">
-                  <p className="text-[10px] md:text-sm font-black text-slate-400 uppercase mb-3 tracking-widest text-center">Wed</p>
+                <div className="p-3 md:p-6 rounded-3xl bg-slate-50/80 border border-slate-200">
+                  <p className="text-[10px] md:text-sm font-black text-slate-400 uppercase mb-3 tracking-widest">Wed</p>
                   <div className="w-12 h-12 md:w-16 md:h-16 bg-white border-4 border-slate-200 rounded-full shadow-lg mx-auto"></div>
                   <p className="font-black text-slate-800 text-xs md:text-lg mt-3 uppercase">White</p>
                 </div>
-                <div className="p-3 md:p-6 rounded-3xl bg-green-50/80 border border-green-100 shadow-sm">
-                  <p className="text-[10px] md:text-sm font-black text-green-700 uppercase mb-3 tracking-widest text-center">Thu</p>
+                <div className="p-3 md:p-6 rounded-3xl bg-green-50/80 border border-green-100">
+                  <p className="text-[10px] md:text-sm font-black text-green-700 uppercase mb-3 tracking-widest">Thu</p>
                   <div className="w-12 h-12 md:w-16 md:h-16 bg-green-600 rounded-full shadow-lg border-4 border-white mx-auto"></div>
                   <p className="font-black text-green-900 text-xs md:text-lg mt-3 uppercase">Green</p>
                 </div>
@@ -137,8 +141,6 @@ export default function EventDashboard() {
 
             {/* DROPDOWNS */}
             <div className="space-y-4">
-              
-              {/* DOCUMENTS */}
               <div className="overflow-hidden bg-white/95 rounded-3xl shadow-2xl">
                 <button onClick={() => toggleTab('docs')} className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white transition-all">
                   <div className="flex items-center gap-4 md:gap-6">
@@ -147,18 +149,28 @@ export default function EventDashboard() {
                   </div>
                   <ChevronDown size={28} className={`transition-transform duration-500 ${activeTab === 'docs' ? 'rotate-180' : ''}`} />
                 </button>
+                
                 {activeTab === 'docs' && (
                   <div className="p-6 pt-0 border-t space-y-3 bg-slate-50/50">
-                    <a href="/docs/operational-report.pdf" download className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-orange-500 transition-all font-bold">
-                      <span className="text-sm md:text-base">Operational Report</span>
-                      <Download size={20} className="text-orange-500" />
-                    </a>
+                    {DOCUMENTS_LIST.map((doc, index) => (
+                      <a 
+                        key={index}
+                        href={`/docs/${doc.fileName}`} 
+                        download={doc.fileName}
+                        className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-orange-500 transition-all group"
+                      >
+                        <div className="flex flex-col text-left">
+                          <span className="font-bold text-slate-800">{doc.name}</span>
+                          <span className="text-[10px] text-slate-400 uppercase font-black">{doc.size} • Download</span>
+                        </div>
+                        <Download size={20} className="text-orange-500 group-hover:scale-125 transition-transform" />
+                      </a>
+                    ))}
                   </div>
                 )}
-
               </div>
 
-              {/* EMAIL Q&A FACILITY */}
+              {/* Q&A */}
               <div className="overflow-hidden bg-white/95 rounded-3xl shadow-2xl">
                 <button onClick={() => toggleTab('qa')} className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white transition-all">
                   <div className="flex items-center gap-4 md:gap-6">
@@ -169,11 +181,11 @@ export default function EventDashboard() {
                 </button>
                 {activeTab === 'qa' && (
                   <div className="p-6 pt-0 border-t bg-slate-50/50">
-                    <p className="text-xs font-bold text-slate-400 my-4 uppercase tracking-widest text-left">Your question will be sent via Email to the Secretariat:</p>
+                    <p className="text-xs font-bold text-slate-400 my-4 uppercase tracking-widest text-left">Secretariat Email Service:</p>
                     <textarea 
                       className="w-full p-5 bg-white border-2 border-slate-200 rounded-2xl focus:border-blue-600 outline-none text-base font-medium mb-4" 
                       rows={3} 
-                      placeholder="Type your question for the panel here..."
+                      placeholder="Type your question..."
                       value={question}
                       onChange={(e) => setQuestion(e.target.value)}
                     ></textarea>
@@ -186,7 +198,6 @@ export default function EventDashboard() {
                   </div>
                 )}
               </div>
-
             </div>
           </div>
         </main>
