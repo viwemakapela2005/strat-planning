@@ -99,7 +99,7 @@ export default function EventDashboard() {
                 <h2 className="text-2xl md:text-3xl font-black uppercase italic">About the Event</h2>
               </div>
               <p className="text-slate-700 leading-relaxed mb-8 font-semibold text-base md:text-lg">
-                Access your official documents below. Use the download buttons to save files directly to your device.
+                Welcome to the 2026 PSCBC Strategic Planning Sessions. During these sessions, you will use this portal to get live updates, download your official documents and there is a QnA section.
               </p>
               
               <div className="space-y-3">
