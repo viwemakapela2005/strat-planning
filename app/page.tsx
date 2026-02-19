@@ -155,14 +155,7 @@ export default function EventDashboard() {
                     </a>
                   </div>
                 )}
-                {activeTab === 'docs' && (
-                  <div className="p-6 pt-0 border-t space-y-3 bg-slate-50/50">
-                    <a href="/docs/resource-documents.pdf" download className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-orange-500 transition-all font-bold">
-                      <span className="text-sm md:text-base">Resource Documents</span>
-                      <Download size={20} className="text-orange-500" />
-                    </a>
-                  </div>
-                )}
+
               </div>
 
               {/* EMAIL Q&A FACILITY */}
