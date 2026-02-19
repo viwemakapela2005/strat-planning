@@ -91,13 +91,23 @@ export default function EventDashboard() {
                 submit questions, and stay updated with live announcements.
               </p>
               <a 
-                href="/docs/programme.pdf" 
-                download 
-                className="flex items-center justify-center gap-4 bg-slate-900 text-white px-8 py-5 rounded-2xl hover:bg-black hover:scale-[1.02] transition-all font-black text-base md:text-xl shadow-xl shadow-black/30 w-full"
-              >
-                <Download size={24} />
-                DOWNLOAD PROGRAMME
-              </a>
+  href="/docs/programme.pdf" 
+  target="_blank" 
+  rel="noopener noreferrer"
+  className="flex items-center justify-between p-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl transition-all"
+>
+  <div className="flex items-center gap-3">
+    <div className="p-2 bg-blue-500/20 rounded-lg">
+      {/* This is just a placeholder for an icon, you can use a Lucide icon here */}
+      <span className="text-blue-400">📄</span>
+    </div>
+    <div>
+      <p className="font-semibold text-white">Event Programme</p>
+      <p className="text-xs text-gray-400">PDF • 2MB</p>
+    </div>
+  </div>
+  <span className="text-gray-500">→</span>
+</a>
             </section>
 
             {/* SHIRT COLOURS */}
