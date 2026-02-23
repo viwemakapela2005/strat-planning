@@ -65,13 +65,14 @@ export default function EventDashboard() {
 
         <main className="max-w-4xl mx-auto px-4 md:px-6 mt-8 md:mt-12">
           
-          {/* HEADER SECTION */}
-          <header className="mb-10 text-center flex flex-col items-center justify-center gap-4">
-            <div className="flex items-center justify-center gap-4 flex-wrap">
+          {/* FIXED HEADER SECTION */}
+          <header className="mb-10 text-center flex flex-col items-center justify-center gap-6">
+            <div className="flex flex-col items-center justify-center gap-6">
               <img 
                 src="/logo.png" 
                 alt="Logo" 
-                className="h-16 md:h-24 w-auto drop-shadow-2xl object-contain"
+                /* Height increased 1.5x and stacked on top */
+                className="h-24 md:h-36 w-auto drop-shadow-2xl object-contain"
                 onError={(e) => {
                   const target = e.currentTarget as HTMLImageElement;
                   target.style.display = 'none';
@@ -150,7 +151,6 @@ export default function EventDashboard() {
 
             {/* 3. DROPDOWNS (DOCUMENTS & QA) */}
             <div className="space-y-4">
-              
               {/* RESOURCE DOCUMENTS DROPDOWN */}
               <div className="overflow-hidden bg-white/95 rounded-3xl shadow-2xl">
                 <button 
@@ -219,8 +219,8 @@ export default function EventDashboard() {
                   </div>
                 )}
               </div>
-            </div> {/* Closing space-y-4 Container */}
-          </div> {/* Closing space-y-5 Container */}
+            </div>
+          </div>
         </main>
       </div>
     </div> 
