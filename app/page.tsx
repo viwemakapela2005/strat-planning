@@ -3,41 +3,51 @@
 import React, { useState, ChangeEvent } from 'react';
 import { 
   FileText, Info, Shirt, Bell, 
-  Download, ChevronDown, Send, Mail
+  Download, ChevronDown, Send, MessageSquare, User
 } from 'lucide-react';
 
-// TypeScript Interface for your files
 interface ResourceDocument {
   name: string;
   fileName: string;
   size: string;
 }
 
+interface LiveQuestion {
+  id: number;
+  user: string;
+  text: string;
+  timestamp: string;
+}
+
 export default function EventDashboard() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
-  const [question, setQuestion] = useState<string>("");
+  const [newQuestion, setNewQuestion] = useState<string>("");
+  
+  // Mock data for live questions - in a real app, this would come from Firebase
+  const [publicQuestions, setPublicQuestions] = useState<LiveQuestion[]>([
+    { id: 1, user: "Delegate", text: "What time is the afternoon tea break?", timestamp: "10:15 AM" },
+    { id: 2, user: "Delegate", text: "Will the presentation slides be shared after the session?", timestamp: "11:30 AM" }
+  ]);
 
-  const YOUR_EMAIL = "viwem@pscbc.org.za";
-  const EVENT_SUBJECT = "PSCBC Strat Planning Question";
-
-  // --- ADD NEW DOCUMENTS HERE ---
   const DOCUMENTS_LIST: ResourceDocument[] = [
     { name: "Operational Report", fileName: "operational-report.pdf", size: "1.2 MB" },
     { name: "Financial Overview", fileName: "finance.pdf", size: "900 KB" },
     { name: "Strategic Plan 2026", fileName: "strat-plan.pdf", size: "3.5 MB" },
   ];
 
-  const toggleTab = (tab: string) => {
-    setActiveTab(activeTab === tab ? null : tab);
-  };
+  const handlePostQuestion = () => {
+    if (!newQuestion.trim()) return alert("Please type a question!");
+    
+    const questionObj: LiveQuestion = {
+      id: Date.now(),
+      user: "You",
+      text: newQuestion,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
 
-  const handleEmailSend = () => {
-    if (!question.trim()) return alert("Please type a question first!");
-    const subject = encodeURIComponent(EVENT_SUBJECT);
-    const body = encodeURIComponent(question);
-    const mailtoUrl = `mailto:${YOUR_EMAIL}?subject=${subject}&body=${body}`;
-    window.location.href = mailtoUrl;
-    setQuestion("");
+    // Add to local state (everyone would see this if connected to a DB)
+    setPublicQuestions([questionObj, ...publicQuestions]);
+    setNewQuestion("");
   };
 
   return (
@@ -57,32 +67,24 @@ export default function EventDashboard() {
         <div className="bg-indigo-700/90 backdrop-blur-xl text-white px-4 py-3 flex items-center justify-center shadow-2xl sticky top-0 z-50 border-b border-white/10">
           <div className="flex items-center gap-3">
             <Bell size={16} className="animate-bounce text-amber-300" />
-            <span className="text-[11px] md:text-sm font-bold uppercase tracking-tight">
-              Strategic Planning Session is Live
+            <span className="text-[11px] md:text-sm font-bold uppercase tracking-tight text-center">
+              Strategic Planning Session is Live • Post your questions below
             </span>
           </div>
         </div>
 
         <main className="max-w-4xl mx-auto px-4 md:px-6 mt-8 md:mt-12">
           
-          {/* HEADER SECTION - FIXED & STACKED */}
+          {/* HEADER SECTION (LOGO 2X SIZE) */}
           <header className="mb-10 text-center flex flex-col items-center justify-center gap-6">
-            <div className="flex flex-col items-center justify-center gap-6">
-              <img 
-                src="/logo.png" 
-                alt="Logo" 
-                /* Height increased 2x: h-16 -> h-32 and md:h-24 -> md:h-48 */
-                className="h-32 md:h-48 w-auto drop-shadow-2xl object-contain"
-                onError={(e) => {
-                  const target = e.currentTarget as HTMLImageElement;
-                  target.style.display = 'none';
-                }} 
-              />
-              <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-white uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] text-center">
-                PSCBC EVENTS
-              </h1>
-            </div>
-
+            <img 
+              src="/logo.png" 
+              alt="Logo" 
+              className="h-32 md:h-48 w-auto drop-shadow-2xl object-contain"
+            />
+            <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-white uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] text-center">
+              PSCBC EVENTS
+            </h1>
             <div className="inline-block px-5 py-1.5 bg-indigo-600/40 backdrop-blur-md rounded-xl border border-indigo-400/30">
               <p className="text-indigo-100 text-lg md:text-2xl font-black tracking-[0.25em] uppercase italic">
                 Strategic Planning Session
@@ -90,136 +92,94 @@ export default function EventDashboard() {
             </div>
           </header>
 
-          {/* MAIN CONTENT AREA */}
           <div className="space-y-5">
-            
-            {/* 1. ABOUT & PROGRAMME DOWNLOAD */}
+            {/* ABOUT SECTION */}
             <section className="bg-white/95 backdrop-blur-md rounded-[2.5rem] p-7 md:p-10 border border-white/40 shadow-2xl">
               <div className="flex items-center gap-3 mb-4 text-indigo-700">
                 <Info size={28} />
-                <h2 className="text-2xl md:text-3xl font-black uppercase italic">About the Event</h2>
+                <h2 className="text-2xl md:text-3xl font-black uppercase italic">About</h2>
               </div>
-              <p className="text-slate-700 leading-relaxed mb-8 font-semibold text-base md:text-lg">
-                Welcome to the 2026 PSCBC Strategic Planning Sessions. During these sessions, you will use this portal to get live updates, download your official documents and there is a QnA section.
+              <p className="text-slate-700 leading-relaxed font-semibold text-base md:text-lg">
+                Use this portal for live updates and official documents. All questions posted in the Live Q&A are public to all delegates.
               </p>
-              
-              <div className="space-y-3">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Programme:</p>
-                <a 
-                  href="/docs/programme.pdf" 
-                  download="PSCBC_Programme_2026.pdf" 
-                  className="flex items-center justify-between p-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-3xl transition-all shadow-lg group active:scale-95"
-                >
-                  <div className="flex items-center gap-4 text-left">
-                    <div className="p-3 bg-white/20 rounded-2xl">
-                      <FileText size={24} />
-                    </div>
-                    <div>
-                      <p className="font-black uppercase italic text-lg leading-none">Event Programme</p>
-                      <p className="text-indigo-200 text-xs mt-1 font-bold uppercase tracking-wider">Download PDF • Click to Save</p>
-                    </div>
-                  </div>
-                  <Download size={28} className="group-hover:translate-y-1 transition-transform" />
-                </a>
-              </div>
             </section>
 
-            {/* 2. SHIRT COLOURS SECTION */}
-            <section className="bg-white/95 backdrop-blur-md border border-white/40 rounded-[2.5rem] p-7 md:p-8 shadow-2xl">
-              <div className="flex items-center gap-3 mb-6 text-slate-800">
-                <Shirt size={28} />
-                <h2 className="text-xl md:text-2xl font-black uppercase italic tracking-tighter">Shirt Colours</h2>
-              </div>
-              <div className="grid grid-cols-3 gap-3 md:gap-6 text-center">
-                <div className="p-3 md:p-6 rounded-3xl bg-blue-50/80 border border-blue-100">
-                  <p className="text-[10px] md:text-sm font-black text-blue-700 uppercase mb-3 tracking-widest text-center">Tue</p>
-                  <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-600 rounded-full shadow-lg border-4 border-white mx-auto"></div>
-                  <p className="font-black text-blue-900 text-xs md:text-lg mt-3 uppercase tracking-tighter">Blue</p>
+            {/* LIVE Q&A SECTION */}
+            <section className="bg-white/95 backdrop-blur-md rounded-[2.5rem] border border-white/40 shadow-2xl overflow-hidden">
+              <div className="p-7 md:p-10 bg-gradient-to-br from-slate-50 to-white">
+                <div className="flex items-center gap-3 mb-6 text-blue-600">
+                  <MessageSquare size={28} />
+                  <h2 className="text-2xl md:text-3xl font-black uppercase italic">Live Public Q&A</h2>
                 </div>
-                <div className="p-3 md:p-6 rounded-3xl bg-slate-50/80 border border-slate-200">
-                  <p className="text-[10px] md:text-sm font-black text-slate-400 uppercase mb-3 tracking-widest text-center">Wed</p>
-                  <div className="w-12 h-12 md:w-16 md:h-16 bg-white border-4 border-slate-200 rounded-full shadow-lg mx-auto"></div>
-                  <p className="font-black text-slate-800 text-xs md:text-lg mt-3 uppercase tracking-tighter">White</p>
-                </div>
-                <div className="p-3 md:p-6 rounded-3xl bg-green-50/80 border border-green-100">
-                  <p className="text-[10px] md:text-sm font-black text-green-700 uppercase mb-3 tracking-widest text-center">Thu</p>
-                  <div className="w-12 h-12 md:w-16 md:h-16 bg-green-600 rounded-full shadow-lg border-4 border-white mx-auto"></div>
-                  <p className="font-black text-green-900 text-xs md:text-lg mt-3 uppercase tracking-tighter">Green</p>
-                </div>
-              </div>
-            </section>
 
-            {/* 3. DROPDOWNS (DOCUMENTS & QA) */}
-            <div className="space-y-4">
-              {/* RESOURCE DOCUMENTS DROPDOWN */}
-              <div className="overflow-hidden bg-white/95 rounded-3xl shadow-2xl">
-                <button 
-                  onClick={() => toggleTab('docs')} 
-                  className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white transition-all"
-                >
-                  <div className="flex items-center gap-4 md:gap-6">
-                    <div className="p-4 bg-orange-500 text-white rounded-2xl shadow-lg shadow-orange-500/30">
-                      <FileText size={28} />
-                    </div>
-                    <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic">Documents</div>
-                  </div>
-                  <ChevronDown size={28} className={`transition-transform duration-500 ${activeTab === 'docs' ? 'rotate-180' : ''}`} />
-                </button>
-                
-                {activeTab === 'docs' && (
-                  <div className="p-6 pt-0 border-t space-y-3 bg-slate-50/50">
-                    {DOCUMENTS_LIST.map((doc, index) => (
-                      <a 
-                        key={index}
-                        href={`/docs/${doc.fileName}`} 
-                        download={doc.fileName}
-                        className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-orange-500 transition-all group"
-                      >
-                        <div className="flex flex-col text-left">
-                          <span className="font-black text-slate-800 uppercase italic">{doc.name}</span>
-                          <span className="text-[10px] text-slate-400 uppercase font-black tracking-widest">{doc.size} • Download</span>
+                {/* Question Input Area */}
+                <div className="bg-slate-100 p-4 rounded-3xl mb-8 border-2 border-slate-200">
+                  <textarea 
+                    className="w-full p-4 bg-white border-2 border-slate-200 rounded-2xl focus:border-blue-600 outline-none text-base font-medium mb-3" 
+                    rows={2} 
+                    placeholder="Ask something public..."
+                    value={newQuestion}
+                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setNewQuestion(e.target.value)}
+                  ></textarea>
+                  <button 
+                    onClick={handlePostQuestion}
+                    className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:bg-blue-700 transition-all active:scale-95 uppercase italic"
+                  >
+                    <Send size={20} /> Post Question Online
+                  </button>
+                </div>
+
+                {/* Live Feed */}
+                <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Live Stream of Questions:</p>
+                  {publicQuestions.map((q) => (
+                    <div key={q.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm animate-in fade-in slide-in-from-bottom-2">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <div className="p-1.5 bg-blue-100 text-blue-600 rounded-lg">
+                            <User size={14} />
+                          </div>
+                          <span className="font-black text-xs uppercase text-slate-500">{q.user}</span>
                         </div>
-                        <Download size={20} className="text-orange-500 group-hover:scale-125 transition-transform" />
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* QA FACILITY DROPDOWN */}
-              <div className="overflow-hidden bg-white/95 rounded-3xl shadow-2xl">
-                <button 
-                  onClick={() => toggleTab('qa')} 
-                  className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white transition-all"
-                >
-                  <div className="flex items-center gap-4 md:gap-6">
-                    <div className="p-4 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-500/30">
-                      <Mail size={28} />
+                        <span className="text-[10px] font-bold text-slate-400">{q.timestamp}</span>
+                      </div>
+                      <p className="text-slate-800 font-bold leading-tight">{q.text}</p>
                     </div>
-                    <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic">Q & A Facility</div>
-                  </div>
-                  <ChevronDown size={28} className={`transition-transform duration-500 ${activeTab === 'qa' ? 'rotate-180' : ''}`} />
-                </button>
-                {activeTab === 'qa' && (
-                  <div className="p-6 pt-0 border-t bg-slate-50/50">
-                    <p className="text-[10px] font-black text-slate-400 my-4 uppercase tracking-widest text-left">Sent to Secretariat via Email:</p>
-                    <textarea 
-                      className="w-full p-5 bg-white border-2 border-slate-200 rounded-2xl focus:border-blue-600 outline-none text-base font-medium mb-4" 
-                      rows={3} 
-                      placeholder="Type your question here..."
-                      value={question}
-                      onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setQuestion(e.target.value)}
-                    ></textarea>
-                    <button 
-                      onClick={handleEmailSend}
-                      className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:bg-blue-700 shadow-xl transition-all active:scale-95 uppercase italic"
-                    >
-                      <Send size={20} /> Submit Question
-                    </button>
-                  </div>
-                )}
+                  ))}
+                </div>
               </div>
+            </section>
+
+            {/* DOCUMENTS DROPDOWN */}
+            <div className="overflow-hidden bg-white/95 rounded-3xl shadow-2xl">
+              <button 
+                onClick={() => setActiveTab(activeTab === 'docs' ? null : 'docs')} 
+                className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white transition-all"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-4 bg-orange-500 text-white rounded-2xl shadow-lg">
+                    <FileText size={28} />
+                  </div>
+                  <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic">Documents</div>
+                </div>
+                <ChevronDown size={28} className={`transition-transform ${activeTab === 'docs' ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {activeTab === 'docs' && (
+                <div className="p-6 pt-0 border-t space-y-3 bg-slate-50/50">
+                  {DOCUMENTS_LIST.map((doc, index) => (
+                    <a key={index} href={`/docs/${doc.fileName}`} download className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-orange-500 transition-all">
+                      <div className="flex flex-col text-left">
+                        <span className="font-black text-slate-800 uppercase italic">{doc.name}</span>
+                        <span className="text-[10px] text-slate-400 uppercase font-black">{doc.size}</span>
+                      </div>
+                      <Download size={20} className="text-orange-500" />
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
+
           </div>
         </main>
       </div>
