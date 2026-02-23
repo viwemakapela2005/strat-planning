@@ -65,24 +65,24 @@ export default function EventDashboard() {
 
         <main className="max-w-4xl mx-auto px-4 md:px-6 mt-8 md:mt-12">
           
-          {/* FIXED HEADER SECTION */}
+          {/* HEADER SECTION - FIXED & STACKED */}
           <header className="mb-10 text-center flex flex-col items-center justify-center gap-6">
             <div className="flex flex-col items-center justify-center gap-6">
               <img 
                 src="/logo.png" 
                 alt="Logo" 
-                /* Height increased 1.5x and stacked on top */
-                className="h-24 md:h-36 w-auto drop-shadow-2xl object-contain"
+                /* Height increased 2x: h-16 -> h-32 and md:h-24 -> md:h-48 */
+                className="h-32 md:h-48 w-auto drop-shadow-2xl object-contain"
                 onError={(e) => {
                   const target = e.currentTarget as HTMLImageElement;
                   target.style.display = 'none';
                 }} 
               />
-              <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-white uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
+              <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-white uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] text-center">
                 PSCBC EVENTS
               </h1>
             </div>
-            
+
             <div className="inline-block px-5 py-1.5 bg-indigo-600/40 backdrop-blur-md rounded-xl border border-indigo-400/30">
               <p className="text-indigo-100 text-lg md:text-2xl font-black tracking-[0.25em] uppercase italic">
                 Strategic Planning Session
