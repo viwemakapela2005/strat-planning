@@ -1,35 +1,8 @@
 "use client";
 
-import { initializeApp } from "firebase/app";
+import React, { useState, ChangeEvent } from 'react';
 import { 
-  getFirestore, 
-  collection, 
-  addDoc, 
-  onSnapshot, 
-  query, 
-  orderBy, 
-  serverTimestamp 
-} from "firebase/firestore";
-
-// 1. First, set up your "Secrets"
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
-};
-
-// 2. This initializes the "Connection" to Firebase
-const app = initializeApp(firebaseConfig);
-
-// 3. This defines what "db" is so your function can use it
-const db = getFirestore(app);
-
-import React, { useState, useEffect, ChangeEvent } from 'react';
-import { 
-  FileText, Info, Shirt, Bell, 
+  FileText, Info, Bell, 
   Download, ChevronDown, Send, MessageSquare, User
 } from 'lucide-react';
 
@@ -50,7 +23,7 @@ export default function EventDashboard() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [newQuestion, setNewQuestion] = useState<string>("");
   
-  // Mock data for live questions - in a real app, this would come from Firebase
+  // Local state for live questions
   const [publicQuestions, setPublicQuestions] = useState<LiveQuestion[]>([
     { id: 1, user: "Delegate", text: "What time is the afternoon tea break?", timestamp: "10:15 AM" },
     { id: 2, user: "Delegate", text: "Will the presentation slides be shared after the session?", timestamp: "11:30 AM" }
@@ -62,21 +35,22 @@ export default function EventDashboard() {
     { name: "Strategic Plan 2026", fileName: "strat-plan.pdf", size: "3.5 MB" },
   ];
 
-  const handlePostQuestion = async () => {
-  if (!newQuestion.trim()) return;
-  
-  try {
-    // This sends the question to the cloud database
-    await addDoc(collection(db, "questions"), {
+  const handlePostQuestion = () => {
+    if (!newQuestion.trim()) return;
+    
+    const now = new Date();
+    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
+    const questionObj: LiveQuestion = {
+      id: Date.now(),
       user: "Delegate",
       text: newQuestion,
-      timestamp: serverTimestamp(), // Uses Cloud time
-    });
-    setNewQuestion(""); 
-  } catch (error) {
-    console.error("Firebase error:", error);
-  }
-};
+      timestamp: timeString
+    };
+
+    setPublicQuestions([questionObj, ...publicQuestions]);
+    setNewQuestion("");
+  };
 
   return (
     <div className="min-h-screen text-slate-900 pb-20 font-sans relative overflow-x-hidden text-left">
@@ -103,7 +77,7 @@ export default function EventDashboard() {
 
         <main className="max-w-4xl mx-auto px-4 md:px-6 mt-8 md:mt-12">
           
-          {/* HEADER SECTION (LOGO 2X SIZE) */}
+          {/* HEADER SECTION */}
           <header className="mb-10 text-center flex flex-col items-center justify-center gap-6">
             <img 
               src="/logo.png" 
@@ -153,7 +127,7 @@ export default function EventDashboard() {
                     onClick={handlePostQuestion}
                     className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:bg-blue-700 transition-all active:scale-95 uppercase italic"
                   >
-                    <Send size={20} /> Post Question Online
+                    <Send size={20} /> Post Question
                   </button>
                 </div>
 
