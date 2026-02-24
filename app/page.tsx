@@ -1,6 +1,33 @@
 "use client";
 
-import React, { useState, ChangeEvent } from 'react';
+import { initializeApp } from "firebase/app";
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  onSnapshot, 
+  query, 
+  orderBy, 
+  serverTimestamp 
+} from "firebase/firestore";
+
+// 1. First, set up your "Secrets"
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
+};
+
+// 2. This initializes the "Connection" to Firebase
+const app = initializeApp(firebaseConfig);
+
+// 3. This defines what "db" is so your function can use it
+const db = getFirestore(app);
+
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { 
   FileText, Info, Shirt, Bell, 
   Download, ChevronDown, Send, MessageSquare, User
@@ -35,20 +62,21 @@ export default function EventDashboard() {
     { name: "Strategic Plan 2026", fileName: "strat-plan.pdf", size: "3.5 MB" },
   ];
 
-  const handlePostQuestion = () => {
-    if (!newQuestion.trim()) return alert("Please type a question!");
-    
-    const questionObj: LiveQuestion = {
-      id: Date.now(),
-      user: "You",
+  const handlePostQuestion = async () => {
+  if (!newQuestion.trim()) return;
+  
+  try {
+    // This sends the question to the cloud database
+    await addDoc(collection(db, "questions"), {
+      user: "Delegate",
       text: newQuestion,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-
-    // Add to local state (everyone would see this if connected to a DB)
-    setPublicQuestions([questionObj, ...publicQuestions]);
-    setNewQuestion("");
-  };
+      timestamp: serverTimestamp(), // Uses Cloud time
+    });
+    setNewQuestion(""); 
+  } catch (error) {
+    console.error("Firebase error:", error);
+  }
+};
 
   return (
     <div className="min-h-screen text-slate-900 pb-20 font-sans relative overflow-x-hidden text-left">
