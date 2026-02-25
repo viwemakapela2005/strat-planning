@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState, ChangeEvent } from 'react';
-import { db } from "./lib/firebase";
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import { 
   FileText, Info, Bell, 
   Download, ChevronDown, Send, MessageSquare, User
 } from 'lucide-react';
+
+import { collection, addDoc, onSnapshot, orderBy, query, serverTimestamp, Timestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 interface ResourceDocument {
   name: string;
@@ -14,43 +16,75 @@ interface ResourceDocument {
 }
 
 interface LiveQuestion {
-  id: number;
+  id: string;
   user: string;
   text: string;
-  timestamp: string;
+  createdAt?: Timestamp | null;
+  timestamp?: string;
 }
 
 export default function EventDashboard() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [newQuestion, setNewQuestion] = useState<string>("");
   
-  // Local state for live questions
-  const [publicQuestions, setPublicQuestions] = useState<LiveQuestion[]>([
-    { id: 1, user: "Delegate", text: "What time is the afternoon tea break?", timestamp: "10:15 AM" },
-    { id: 2, user: "Delegate", text: "Will the presentation slides be shared after the session?", timestamp: "11:30 AM" }
-  ]);
-
-  const DOCUMENTS_LIST: ResourceDocument[] = [
+  // Live questions come from Firestore (real-time)
+  const [publicQuestions, setPublicQuestions] = useState<LiveQuestion[]>([]);
+const DOCUMENTS_LIST: ResourceDocument[] = [
     { name: "Operational Report", fileName: "operational-report.pdf", size: "1.2 MB" },
     { name: "Financial Overview", fileName: "finance.pdf", size: "900 KB" },
     { name: "Strategic Plan 2026", fileName: "strat-plan.pdf", size: "3.5 MB" },
   ];
 
-  const handlePostQuestion = () => {
-    if (!newQuestion.trim()) return;
-    
-    const now = new Date();
-    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    
-    const questionObj: LiveQuestion = {
-      id: Date.now(),
-      user: "Delegate",
-      text: newQuestion,
-      timestamp: timeString
-    };
+  // Firestore real-time listener (shared across all users)
+  useEffect(() => {
+    const q = query(collection(db, "questions"), orderBy("createdAt", "desc"));
 
-    setPublicQuestions([questionObj, ...publicQuestions]);
-    setNewQuestion("");
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const questions: LiveQuestion[] = snapshot.docs.map((doc) => {
+        const data = doc.data() as {
+          user?: string;
+          text?: string;
+          createdAt?: Timestamp | null;
+        };
+
+        const createdAt = data.createdAt ?? null;
+
+        const timestamp =
+          createdAt && createdAt.toDate
+            ? createdAt.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+            : "";
+
+        return {
+          id: doc.id,
+          user: data.user ?? "Delegate",
+          text: data.text ?? "",
+          createdAt,
+          timestamp,
+        };
+      });
+
+      setPublicQuestions(questions);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+
+  const handlePostQuestion = async () => {
+    if (!newQuestion.trim()) return;
+
+    try {
+      await addDoc(collection(db, "questions"), {
+        user: "Delegate",
+        text: newQuestion.trim(),
+        createdAt: serverTimestamp(),
+      });
+
+      setNewQuestion("");
+    } catch (err) {
+      console.error("Failed to post question:", err);
+      alert("Could not post your question. Please try again.");
+    }
   };
 
   return (
