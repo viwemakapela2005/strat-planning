@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 
 import { collection, addDoc, onSnapshot, orderBy, query, serverTimestamp, Timestamp } from 'firebase/firestore';
-import { db } from './lib/firebase';
+import { db } from '../lib/firebase';
 
 interface ResourceDocument {
   name: string;
