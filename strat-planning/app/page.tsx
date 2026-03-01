@@ -1,18 +1,13 @@
 "use client";
 
-import React, { useEffect, useState, ChangeEvent } from "react";
+import React, { useState } from "react";
 import {
   FileText,
   Info,
   Bell,
   Download,
   ChevronDown,
-  Send,
-  MessageSquare,
-  User,
 } from "lucide-react";
-
-import { supabase } from "@/lib/supabase";
 
 interface ResourceDocument {
   name: string;
@@ -20,88 +15,14 @@ interface ResourceDocument {
   size: string;
 }
 
-interface LiveQuestion {
-  id: string;
-  user: string;
-  text: string;
-  timestamp?: string;
-}
-
 export default function EventDashboard() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
-  const [newQuestion, setNewQuestion] = useState<string>("");
-  const [publicQuestions, setPublicQuestions] = useState<LiveQuestion[]>([]);
-  const [qnaStatus, setQnaStatus] = useState<string>("");
 
   const DOCUMENTS_LIST: ResourceDocument[] = [
     { name: "Operational Report", fileName: "operational-report.pdf", size: "1.2 MB" },
     { name: "Financial Overview", fileName: "finance.pdf", size: "900 KB" },
     { name: "Strategic Plan 2026", fileName: "strat-plan.pdf", size: "3.5 MB" },
   ];
-
-  async function fetchQuestions() {
-    const { data, error } = await supabase
-      .from("questions")
-      .select("id, user_name, text, created_at")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error("Fetch questions error:", error);
-      setQnaStatus(`Load failed: ${error.message}`);
-      return;
-    }
-
-    setPublicQuestions(
-      (data ?? []).map((row: any) => ({
-        id: row.id,
-        user: row.user_name ?? "Delegate",
-        text: row.text ?? "",
-        timestamp: row.created_at
-          ? new Date(row.created_at).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-          : "",
-      }))
-    );
-  }
-
-  // ONLY load from Supabase on page load (no hard-coded examples)
-  useEffect(() => {
-    setQnaStatus("Loading questions...");
-    fetchQuestions().finally(() => setQnaStatus(""));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handlePostQuestion = async () => {
-    const text = newQuestion.trim();
-    if (!text) {
-      setQnaStatus("Type a question first.");
-      return;
-    }
-
-    const hasUrl = !!process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const hasKey = !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-    setQnaStatus(`Posting... (url: ${hasUrl ? "OK" : "MISSING"}, key: ${hasKey ? "OK" : "MISSING"})`);
-
-    const { error } = await supabase.from("questions").insert({
-      user_name: "Delegate",
-      text: text,
-    });
-
-    if (error) {
-      console.error("Insert question error:", error);
-      setQnaStatus(`Insert failed: ${error.message}`);
-      return;
-    }
-
-    setNewQuestion("");
-    setQnaStatus("Posted ✅ Reloading...");
-
-    await fetchQuestions();
-    setQnaStatus("");
-  };
 
   return (
     <div className="min-h-screen text-slate-900 pb-20 font-sans relative overflow-x-hidden text-left">
@@ -119,7 +40,7 @@ export default function EventDashboard() {
           <div className="flex items-center gap-3">
             <Bell size={16} className="animate-bounce text-amber-300" />
             <span className="text-[11px] md:text-sm font-bold uppercase tracking-tight text-center">
-              Strategic Planning Session is Live • Post your questions below
+              Strategic Planning Session is Live • Ask your questions in the Slido below
             </span>
           </div>
         </div>
@@ -150,88 +71,22 @@ export default function EventDashboard() {
                 <h2 className="text-2xl md:text-3xl font-black uppercase italic">About</h2>
               </div>
               <p className="text-slate-700 leading-relaxed font-semibold text-base md:text-lg">
-                Use this portal for live updates and official documents. All questions posted in the Live Q&A are public to all
-                delegates.
+                Welcome to the Strategic Planning Session portal. Below you can participate in the Live Q&A and access official documents.
               </p>
             </section>
 
-            {/* LIVE Q&A SECTION */}
+            {/* SLIDO Q&A SECTION */}
             <section className="bg-white/95 backdrop-blur-md rounded-[2.5rem] border border-white/40 shadow-2xl overflow-hidden">
-              <div className="p-7 md:p-10 bg-gradient-to-br from-slate-50 to-white">
-                <div className="flex items-center gap-3 mb-6 text-blue-600">
-                  <MessageSquare size={28} />
-                  <h2 className="text-2xl md:text-3xl font-black uppercase italic">
-                    Live Public Q&A
-                  </h2>
-                </div>
-
-                {/* Question Input Area */}
-                <div className="bg-slate-100 p-4 rounded-3xl mb-8 border-2 border-slate-200">
-                  <textarea
-                    className="w-full p-4 bg-white border-2 border-slate-200 rounded-2xl focus:border-blue-600 outline-none text-base font-medium mb-3"
-                    rows={2}
-                    placeholder="Ask something public..."
-                    value={newQuestion}
-                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-                      setNewQuestion(e.target.value)
-                    }
-                  ></textarea>
-
-                  <button
-  onClick={() => {
-    setQnaStatus("Button clicked ✅");
-    handlePostQuestion();
-  }}
-  className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:bg-blue-700 transition-all active:scale-95 uppercase italic"
->
-  <Send size={20} /> Post Question
-</button>
-
-<div className="mt-3 p-3 rounded-xl bg-yellow-200 text-slate-900 font-black">
-  STATUS: {qnaStatus || "No status yet"}
-</div>
-
-                  {qnaStatus ? (
-                    <p className="mt-3 text-xs font-bold text-slate-500">{qnaStatus}</p>
-                  ) : null}
-                </div>
-
-                {/* Live Feed */}
-                <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
-                    Live Stream of Questions:
-                  </p>
-
-                  {publicQuestions.length === 0 ? (
-                    <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                      <p className="text-slate-600 font-bold">
-                        No questions yet. Be the first to ask 👀
-                      </p>
-                    </div>
-                  ) : (
-                    publicQuestions.map((q) => (
-                      <div
-                        key={q.id}
-                        className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm animate-in fade-in slide-in-from-bottom-2"
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <div className="p-1.5 bg-blue-100 text-blue-600 rounded-lg">
-                              <User size={14} />
-                            </div>
-                            <span className="font-black text-xs uppercase text-slate-500">
-                              {q.user}
-                            </span>
-                          </div>
-                          <span className="text-[10px] font-bold text-slate-400">
-                            {q.timestamp}
-                          </span>
-                        </div>
-                        <p className="text-slate-800 font-bold leading-tight">{q.text}</p>
-                      </div>
-                    ))
-                  )}
-                </div>
+              <div className="p-1 bg-slate-200">
+                <iframe 
+                  src="https://app.sli.do/event/98R4jLXjEZ7jAAp7bfESBA" 
+                  height="700px" 
+                  width="100%" 
+                  frameBorder="0" 
+                  style={{ minHeight: "600px", borderRadius: "2rem" }} 
+                  allow="clipboard-write" 
+                  title="Slido"
+                ></iframe>
               </div>
             </section>
 
