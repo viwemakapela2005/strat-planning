@@ -39,39 +39,38 @@ export default function EventDashboard() {
     { name: "Strategic Plan 2026", fileName: "strat-plan.pdf", size: "3.5 MB" },
   ];
 
-  // Load questions from Supabase (persists after refresh)
-  useEffect(() => {
-    async function loadQuestions() {
-      setQnaStatus("Loading questions...");
-      const { data, error } = await supabase
-        .from("questions")
-        .select("id, user_name, text, created_at")
-        .order("created_at", { ascending: false });
+  async function fetchQuestions() {
+    const { data, error } = await supabase
+      .from("questions")
+      .select("id, user_name, text, created_at")
+      .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error("Load questions error:", error);
-        setQnaStatus(`Load failed: ${error.message}`);
-        return;
-      }
-
-      setPublicQuestions(
-        (data ?? []).map((row: any) => ({
-          id: row.id,
-          user: row.user_name ?? "Delegate",
-          text: row.text ?? "",
-          timestamp: row.created_at
-            ? new Date(row.created_at).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-            : "",
-        }))
-      );
-
-      setQnaStatus("");
+    if (error) {
+      console.error("Fetch questions error:", error);
+      setQnaStatus(`Load failed: ${error.message}`);
+      return;
     }
 
-    loadQuestions();
+    setPublicQuestions(
+      (data ?? []).map((row: any) => ({
+        id: row.id,
+        user: row.user_name ?? "Delegate",
+        text: row.text ?? "",
+        timestamp: row.created_at
+          ? new Date(row.created_at).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          : "",
+      }))
+    );
+  }
+
+  // ONLY load from Supabase on page load (no hard-coded examples)
+  useEffect(() => {
+    setQnaStatus("Loading questions...");
+    fetchQuestions().finally(() => setQnaStatus(""));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handlePostQuestion = async () => {
@@ -86,52 +85,22 @@ export default function EventDashboard() {
 
     setQnaStatus(`Posting... (url: ${hasUrl ? "OK" : "MISSING"}, key: ${hasKey ? "OK" : "MISSING"})`);
 
-    try {
-      const { error } = await supabase.from("questions").insert({
-        user_name: "Delegate",
-        text: text,
-      });
+    const { error } = await supabase.from("questions").insert({
+      user_name: "Delegate",
+      text: text,
+    });
 
-      if (error) {
-        console.error("Insert question error:", error);
-        setQnaStatus(`Insert failed: ${error.message}`);
-        return;
-      }
-
-      setNewQuestion("");
-      setQnaStatus("Posted ✅ Reloading list...");
-
-      const { data, error: loadErr } = await supabase
-        .from("questions")
-        .select("id, user_name, text, created_at")
-        .order("created_at", { ascending: false });
-
-      if (loadErr) {
-        console.error("Reload questions error:", loadErr);
-        setQnaStatus(`Reload failed: ${loadErr.message}`);
-        return;
-      }
-
-      setPublicQuestions(
-        (data ?? []).map((row: any) => ({
-          id: row.id,
-          user: row.user_name ?? "Delegate",
-          text: row.text ?? "",
-          timestamp: row.created_at
-            ? new Date(row.created_at).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-            : "",
-        }))
-      );
-
-      setQnaStatus("Done ✅");
-      setTimeout(() => setQnaStatus(""), 1500);
-    } catch (e: any) {
-      console.error("Crash posting question:", e);
-      setQnaStatus(`Crash: ${e?.message ?? String(e)}`);
+    if (error) {
+      console.error("Insert question error:", error);
+      setQnaStatus(`Insert failed: ${error.message}`);
+      return;
     }
+
+    setNewQuestion("");
+    setQnaStatus("Posted ✅ Reloading...");
+
+    await fetchQuestions();
+    setQnaStatus("");
   };
 
   return (
@@ -191,7 +160,9 @@ export default function EventDashboard() {
               <div className="p-7 md:p-10 bg-gradient-to-br from-slate-50 to-white">
                 <div className="flex items-center gap-3 mb-6 text-blue-600">
                   <MessageSquare size={28} />
-                  <h2 className="text-2xl md:text-3xl font-black uppercase italic">Live Public Q&A</h2>
+                  <h2 className="text-2xl md:text-3xl font-black uppercase italic">
+                    Live Public Q&A
+                  </h2>
                 </div>
 
                 {/* Question Input Area */}
@@ -201,7 +172,9 @@ export default function EventDashboard() {
                     rows={2}
                     placeholder="Ask something public..."
                     value={newQuestion}
-                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setNewQuestion(e.target.value)}
+                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                      setNewQuestion(e.target.value)
+                    }
                   ></textarea>
 
                   <button
@@ -218,24 +191,39 @@ export default function EventDashboard() {
 
                 {/* Live Feed */}
                 <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Live Stream of Questions:</p>
-                  {publicQuestions.map((q) => (
-                    <div
-                      key={q.id}
-                      className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm animate-in fade-in slide-in-from-bottom-2"
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <div className="p-1.5 bg-blue-100 text-blue-600 rounded-lg">
-                            <User size={14} />
-                          </div>
-                          <span className="font-black text-xs uppercase text-slate-500">{q.user}</span>
-                        </div>
-                        <span className="text-[10px] font-bold text-slate-400">{q.timestamp}</span>
-                      </div>
-                      <p className="text-slate-800 font-bold leading-tight">{q.text}</p>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
+                    Live Stream of Questions:
+                  </p>
+
+                  {publicQuestions.length === 0 ? (
+                    <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                      <p className="text-slate-600 font-bold">
+                        No questions yet. Be the first to ask 👀
+                      </p>
                     </div>
-                  ))}
+                  ) : (
+                    publicQuestions.map((q) => (
+                      <div
+                        key={q.id}
+                        className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm animate-in fade-in slide-in-from-bottom-2"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <div className="p-1.5 bg-blue-100 text-blue-600 rounded-lg">
+                              <User size={14} />
+                            </div>
+                            <span className="font-black text-xs uppercase text-slate-500">
+                              {q.user}
+                            </span>
+                          </div>
+                          <span className="text-[10px] font-bold text-slate-400">
+                            {q.timestamp}
+                          </span>
+                        </div>
+                        <p className="text-slate-800 font-bold leading-tight">{q.text}</p>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </section>
@@ -250,7 +238,9 @@ export default function EventDashboard() {
                   <div className="p-4 bg-orange-500 text-white rounded-2xl shadow-lg">
                     <FileText size={28} />
                   </div>
-                  <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic">Documents</div>
+                  <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic">
+                    Documents
+                  </div>
                 </div>
                 <ChevronDown
                   size={28}
@@ -268,8 +258,12 @@ export default function EventDashboard() {
                       className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-orange-500 transition-all"
                     >
                       <div className="flex flex-col text-left">
-                        <span className="font-black text-slate-800 uppercase italic">{doc.name}</span>
-                        <span className="text-[10px] text-slate-400 uppercase font-black">{doc.size}</span>
+                        <span className="font-black text-slate-800 uppercase italic">
+                          {doc.name}
+                        </span>
+                        <span className="text-[10px] text-slate-400 uppercase font-black">
+                          {doc.size}
+                        </span>
                       </div>
                       <Download size={20} className="text-orange-500" />
                     </a>
