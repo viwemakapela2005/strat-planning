@@ -1,4 +1,4 @@
-import { initializeApp, getApps } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -10,7 +10,12 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
-// Initialize Firebase (prevents double-initializing)
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-export const db = getFirestore(app);
+// DEBUG: Check if keys are hitting the browser
+if (typeof window !== "undefined") {
+  console.log("Firebase Key Check:", !!process.env.NEXT_PUBLIC_FIREBASE_API_KEY ? "✅ KEYS FOUND" : "❌ KEYS MISSING");
+}
 
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+const db = getFirestore(app);
+
+export { db };
