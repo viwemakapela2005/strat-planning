@@ -1,13 +1,18 @@
 "use client";
 
-import React, { useEffect, useState, ChangeEvent } from 'react';
-import { 
-  FileText, Info, Bell, 
-  Download, ChevronDown, Send, MessageSquare, User
-} from 'lucide-react';
+import React, { useEffect, useState, ChangeEvent } from "react";
+import {
+  FileText,
+  Info,
+  Bell,
+  Download,
+  ChevronDown,
+  Send,
+  MessageSquare,
+  User,
+} from "lucide-react";
 
-import { collection, addDoc, onSnapshot, orderBy, query, serverTimestamp, Timestamp } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { supabase } from "@/lib/supabase";
 
 interface ResourceDocument {
   name: string;
@@ -19,79 +24,120 @@ interface LiveQuestion {
   id: string;
   user: string;
   text: string;
-  createdAt?: Timestamp | null;
   timestamp?: string;
 }
 
 export default function EventDashboard() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [newQuestion, setNewQuestion] = useState<string>("");
-  
-  // Live questions come from Firestore (real-time)
   const [publicQuestions, setPublicQuestions] = useState<LiveQuestion[]>([]);
-const DOCUMENTS_LIST: ResourceDocument[] = [
+  const [qnaStatus, setQnaStatus] = useState<string>("");
+
+  const DOCUMENTS_LIST: ResourceDocument[] = [
     { name: "Operational Report", fileName: "operational-report.pdf", size: "1.2 MB" },
     { name: "Financial Overview", fileName: "finance.pdf", size: "900 KB" },
     { name: "Strategic Plan 2026", fileName: "strat-plan.pdf", size: "3.5 MB" },
   ];
 
-  // Firestore real-time listener (shared across all users)
+  // Load questions from Supabase (persists after refresh)
   useEffect(() => {
-    const q = query(collection(db, "questions"), orderBy("createdAt", "desc"));
+    async function loadQuestions() {
+      setQnaStatus("Loading questions...");
+      const { data, error } = await supabase
+        .from("questions")
+        .select("id, user_name, text, created_at")
+        .order("created_at", { ascending: false });
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const questions: LiveQuestion[] = snapshot.docs.map((doc) => {
-        const data = doc.data() as {
-          user?: string;
-          text?: string;
-          createdAt?: Timestamp | null;
-        };
+      if (error) {
+        console.error("Load questions error:", error);
+        setQnaStatus(`Load failed: ${error.message}`);
+        return;
+      }
 
-        const createdAt = data.createdAt ?? null;
+      setPublicQuestions(
+        (data ?? []).map((row: any) => ({
+          id: row.id,
+          user: row.user_name ?? "Delegate",
+          text: row.text ?? "",
+          timestamp: row.created_at
+            ? new Date(row.created_at).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : "",
+        }))
+      );
 
-        const timestamp =
-          createdAt && createdAt.toDate
-            ? createdAt.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-            : "";
+      setQnaStatus("");
+    }
 
-        return {
-          id: doc.id,
-          user: data.user ?? "Delegate",
-          text: data.text ?? "",
-          createdAt,
-          timestamp,
-        };
-      });
-
-      setPublicQuestions(questions);
-    });
-
-    return () => unsubscribe();
+    loadQuestions();
   }, []);
 
-
   const handlePostQuestion = async () => {
-    if (!newQuestion.trim()) return;
+    const text = newQuestion.trim();
+    if (!text) {
+      setQnaStatus("Type a question first.");
+      return;
+    }
+
+    const hasUrl = !!process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const hasKey = !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    setQnaStatus(`Posting... (url: ${hasUrl ? "OK" : "MISSING"}, key: ${hasKey ? "OK" : "MISSING"})`);
 
     try {
-      await addDoc(collection(db, "questions"), {
-        user: "Delegate",
-        text: newQuestion.trim(),
-        createdAt: serverTimestamp(),
+      const { error } = await supabase.from("questions").insert({
+        user_name: "Delegate",
+        text: text,
       });
 
+      if (error) {
+        console.error("Insert question error:", error);
+        setQnaStatus(`Insert failed: ${error.message}`);
+        return;
+      }
+
       setNewQuestion("");
-    } catch (err) {
-      console.error("Failed to post question:", err);
-      alert("Could not post your question. Please try again.");
+      setQnaStatus("Posted ✅ Reloading list...");
+
+      const { data, error: loadErr } = await supabase
+        .from("questions")
+        .select("id, user_name, text, created_at")
+        .order("created_at", { ascending: false });
+
+      if (loadErr) {
+        console.error("Reload questions error:", loadErr);
+        setQnaStatus(`Reload failed: ${loadErr.message}`);
+        return;
+      }
+
+      setPublicQuestions(
+        (data ?? []).map((row: any) => ({
+          id: row.id,
+          user: row.user_name ?? "Delegate",
+          text: row.text ?? "",
+          timestamp: row.created_at
+            ? new Date(row.created_at).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : "",
+        }))
+      );
+
+      setQnaStatus("Done ✅");
+      setTimeout(() => setQnaStatus(""), 1500);
+    } catch (e: any) {
+      console.error("Crash posting question:", e);
+      setQnaStatus(`Crash: ${e?.message ?? String(e)}`);
     }
   };
 
   return (
     <div className="min-h-screen text-slate-900 pb-20 font-sans relative overflow-x-hidden text-left">
-      
       {/* BACKGROUND LAYER */}
-      <div 
+      <div
         className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('photo.jpeg')" }}
       >
@@ -99,7 +145,6 @@ const DOCUMENTS_LIST: ResourceDocument[] = [
       </div>
 
       <div className="relative z-10">
-        
         {/* TOP ANNOUNCEMENT BAR */}
         <div className="bg-indigo-700/90 backdrop-blur-xl text-white px-4 py-3 flex items-center justify-center shadow-2xl sticky top-0 z-50 border-b border-white/10">
           <div className="flex items-center gap-3">
@@ -111,12 +156,11 @@ const DOCUMENTS_LIST: ResourceDocument[] = [
         </div>
 
         <main className="max-w-4xl mx-auto px-4 md:px-6 mt-8 md:mt-12">
-          
           {/* HEADER SECTION */}
           <header className="mb-10 text-center flex flex-col items-center justify-center gap-6">
-            <img 
-              src="/logo.png" 
-              alt="Logo" 
+            <img
+              src="/logo.png"
+              alt="Logo"
               className="h-32 md:h-48 w-auto drop-shadow-2xl object-contain"
             />
             <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-white uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] text-center">
@@ -137,7 +181,8 @@ const DOCUMENTS_LIST: ResourceDocument[] = [
                 <h2 className="text-2xl md:text-3xl font-black uppercase italic">About</h2>
               </div>
               <p className="text-slate-700 leading-relaxed font-semibold text-base md:text-lg">
-                Use this portal for live updates and official documents. All questions posted in the Live Q&A are public to all delegates.
+                Use this portal for live updates and official documents. All questions posted in the Live Q&A are public to all
+                delegates.
               </p>
             </section>
 
@@ -151,26 +196,34 @@ const DOCUMENTS_LIST: ResourceDocument[] = [
 
                 {/* Question Input Area */}
                 <div className="bg-slate-100 p-4 rounded-3xl mb-8 border-2 border-slate-200">
-                  <textarea 
-                    className="w-full p-4 bg-white border-2 border-slate-200 rounded-2xl focus:border-blue-600 outline-none text-base font-medium mb-3" 
-                    rows={2} 
+                  <textarea
+                    className="w-full p-4 bg-white border-2 border-slate-200 rounded-2xl focus:border-blue-600 outline-none text-base font-medium mb-3"
+                    rows={2}
                     placeholder="Ask something public..."
                     value={newQuestion}
                     onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setNewQuestion(e.target.value)}
                   ></textarea>
-                  <button 
+
+                  <button
                     onClick={handlePostQuestion}
                     className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:bg-blue-700 transition-all active:scale-95 uppercase italic"
                   >
                     <Send size={20} /> Post Question
                   </button>
+
+                  {qnaStatus ? (
+                    <p className="mt-3 text-xs font-bold text-slate-500">{qnaStatus}</p>
+                  ) : null}
                 </div>
 
                 {/* Live Feed */}
                 <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Live Stream of Questions:</p>
                   {publicQuestions.map((q) => (
-                    <div key={q.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm animate-in fade-in slide-in-from-bottom-2">
+                    <div
+                      key={q.id}
+                      className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm animate-in fade-in slide-in-from-bottom-2"
+                    >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <div className="p-1.5 bg-blue-100 text-blue-600 rounded-lg">
@@ -189,8 +242,8 @@ const DOCUMENTS_LIST: ResourceDocument[] = [
 
             {/* DOCUMENTS DROPDOWN */}
             <div className="overflow-hidden bg-white/95 rounded-3xl shadow-2xl">
-              <button 
-                onClick={() => setActiveTab(activeTab === 'docs' ? null : 'docs')} 
+              <button
+                onClick={() => setActiveTab(activeTab === "docs" ? null : "docs")}
                 className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white transition-all"
               >
                 <div className="flex items-center gap-4">
@@ -199,13 +252,21 @@ const DOCUMENTS_LIST: ResourceDocument[] = [
                   </div>
                   <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic">Documents</div>
                 </div>
-                <ChevronDown size={28} className={`transition-transform ${activeTab === 'docs' ? 'rotate-180' : ''}`} />
+                <ChevronDown
+                  size={28}
+                  className={`transition-transform ${activeTab === "docs" ? "rotate-180" : ""}`}
+                />
               </button>
-              
-              {activeTab === 'docs' && (
+
+              {activeTab === "docs" && (
                 <div className="p-6 pt-0 border-t space-y-3 bg-slate-50/50">
                   {DOCUMENTS_LIST.map((doc, index) => (
-                    <a key={index} href={`/docs/${doc.fileName}`} download className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-orange-500 transition-all">
+                    <a
+                      key={index}
+                      href={`/docs/${doc.fileName}`}
+                      download
+                      className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-orange-500 transition-all"
+                    >
                       <div className="flex flex-col text-left">
                         <span className="font-black text-slate-800 uppercase italic">{doc.name}</span>
                         <span className="text-[10px] text-slate-400 uppercase font-black">{doc.size}</span>
@@ -216,10 +277,9 @@ const DOCUMENTS_LIST: ResourceDocument[] = [
                 </div>
               )}
             </div>
-
           </div>
         </main>
       </div>
-    </div> 
+    </div>
   );
 }
