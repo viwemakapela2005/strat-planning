@@ -178,11 +178,18 @@ export default function EventDashboard() {
                   ></textarea>
 
                   <button
-                    onClick={handlePostQuestion}
-                    className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:bg-blue-700 transition-all active:scale-95 uppercase italic"
-                  >
-                    <Send size={20} /> Post Question
-                  </button>
+  onClick={() => {
+    setQnaStatus("Button clicked ✅");
+    handlePostQuestion();
+  }}
+  className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:bg-blue-700 transition-all active:scale-95 uppercase italic"
+>
+  <Send size={20} /> Post Question
+</button>
+
+<div className="mt-3 p-3 rounded-xl bg-yellow-200 text-slate-900 font-black">
+  STATUS: {qnaStatus || "No status yet"}
+</div>
 
                   {qnaStatus ? (
                     <p className="mt-3 text-xs font-bold text-slate-500">{qnaStatus}</p>
