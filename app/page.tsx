@@ -90,7 +90,7 @@ export default function EventDashboard() {
                 <div className="flex flex-col items-center text-center p-4 bg-slate-100 rounded-3xl border-2 border-slate-200">
                   <span className="text-[10px] font-black uppercase text-slate-500 mb-2">Day 1</span>
                   <div className="text-2xl mb-2">🇿🇦</div>
-                  <span className="text-xs font-bold uppercase italic leading-tight">SA Flag Colors</span>
+                  <span className="text-xs font-bold uppercase italic leading-tight">Party Colours</span>
                 </div>
 
                 {/* DAY 2 */}
