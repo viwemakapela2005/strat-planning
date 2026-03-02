@@ -19,12 +19,12 @@ interface ResourceDocument {
 export default function EventDashboard() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
 
-  // UPDATED LIST WITH PROGRAMME
+  // UPDATED LIST WITH YOUR NEW REPORTS
   const DOCUMENTS_LIST: ResourceDocument[] = [
     { name: "Event Programme", fileName: "programme.pdf", size: "1.5 MB" },
+    { name: "Annual Report 2024/2025", fileName: "annualreport.pdf", size: "4.2 MB" },
+    { name: "Resource Report", fileName: "resourcebook.pdf", size: "2.8 MB" },
     { name: "Operational Report", fileName: "operational-report.pdf", size: "1.2 MB" },
-    { name: "Financial Overview", fileName: "finance.pdf", size: "900 KB" },
-    { name: "Strategic Plan 2026", fileName: "strat-plan.pdf", size: "3.5 MB" },
   ];
 
   return (
@@ -78,7 +78,7 @@ export default function EventDashboard() {
               </p>
             </section>
 
-            {/* DRESS CODE SECTION - ENZA! */}
+            {/* DRESS CODE SECTION */}
             <section className="bg-white/95 backdrop-blur-md rounded-[2.5rem] p-7 md:p-10 border border-white/40 shadow-2xl">
               <div className="flex items-center gap-3 mb-6 text-orange-600">
                 <Shirt size={28} />
@@ -86,28 +86,24 @@ export default function EventDashboard() {
               </div>
               
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {/* DAY 1 */}
                 <div className="flex flex-col items-center text-center p-4 bg-slate-100 rounded-3xl border-2 border-slate-200">
                   <span className="text-[10px] font-black uppercase text-slate-500 mb-2">Day 1</span>
                   <div className="text-2xl mb-2">🇿🇦</div>
                   <span className="text-xs font-bold uppercase italic leading-tight">Party Colours</span>
                 </div>
 
-                {/* DAY 2 */}
                 <div className="flex flex-col items-center text-center p-4 bg-slate-100 rounded-3xl border-2 border-slate-200">
                   <span className="text-[10px] font-black uppercase text-slate-500 mb-2">Day 2</span>
                   <div className="w-8 h-8 rounded-full shadow-inner mb-2 bg-green-600 border-2 border-white"></div>
                   <span className="text-xs font-bold uppercase italic">Green</span>
                 </div>
 
-                {/* DAY 3 */}
                 <div className="flex flex-col items-center text-center p-4 bg-slate-100 rounded-3xl border-2 border-slate-200">
                   <span className="text-[10px] font-black uppercase text-slate-500 mb-2">Day 3</span>
                   <div className="w-8 h-8 rounded-full shadow-inner mb-2 bg-black border-2 border-white"></div>
                   <span className="text-xs font-bold uppercase italic">Black</span>
                 </div>
 
-                {/* COCKTAIL */}
                 <div className="flex flex-col items-center text-center p-4 bg-indigo-600 rounded-3xl shadow-lg text-white">
                   <span className="text-[10px] font-black uppercase text-indigo-200 mb-2">Cocktail</span>
                   <div className="w-8 h-8 rounded-full shadow-inner mb-2 bg-white border-2 border-indigo-300"></div>
