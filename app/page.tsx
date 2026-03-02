@@ -19,9 +19,10 @@ interface ResourceDocument {
 export default function EventDashboard() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
 
-  // UPDATED LIST WITH YOUR NEW REPORTS
+  // UPDATED LIST WITH 5 DOCUMENTS
   const DOCUMENTS_LIST: ResourceDocument[] = [
     { name: "Event Programme", fileName: "programme.pdf", size: "1.5 MB" },
+    { name: "PSCBC 30 Year Book", fileName: "PSCBC30YearBook.pdf", size: "15.0 MB" },
     { name: "Annual Report 2024/2025", fileName: "annualreport.pdf", size: "4.2 MB" },
     { name: "Resource Report", fileName: "resourcebook.pdf", size: "2.8 MB" },
     { name: "Operational Report", fileName: "operational-report.pdf", size: "1.2 MB" },
