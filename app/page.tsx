@@ -7,6 +7,7 @@ import {
   Bell,
   Download,
   ChevronDown,
+  Shirt,
 } from "lucide-react";
 
 interface ResourceDocument {
@@ -18,7 +19,9 @@ interface ResourceDocument {
 export default function EventDashboard() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
 
+  // UPDATED LIST WITH PROGRAMME
   const DOCUMENTS_LIST: ResourceDocument[] = [
+    { name: "Event Programme", fileName: "programme.pdf", size: "1.5 MB" },
     { name: "Operational Report", fileName: "operational-report.pdf", size: "1.2 MB" },
     { name: "Financial Overview", fileName: "finance.pdf", size: "900 KB" },
     { name: "Strategic Plan 2026", fileName: "strat-plan.pdf", size: "3.5 MB" },
@@ -71,8 +74,46 @@ export default function EventDashboard() {
                 <h2 className="text-2xl md:text-3xl font-black uppercase italic">About</h2>
               </div>
               <p className="text-slate-700 leading-relaxed font-semibold text-base md:text-lg">
-                Welcome to the Strategic Planning Session portal. Below you can participate in the Live Q&A and access official documents.
+                Welcome to the Strategic Planning Session portal. Below you can participate in the Live Q&A, check the dress code, and access official documents.
               </p>
+            </section>
+
+            {/* DRESS CODE SECTION - ENZA! */}
+            <section className="bg-white/95 backdrop-blur-md rounded-[2.5rem] p-7 md:p-10 border border-white/40 shadow-2xl">
+              <div className="flex items-center gap-3 mb-6 text-orange-600">
+                <Shirt size={28} />
+                <h2 className="text-2xl md:text-3xl font-black uppercase italic">Dress Code</h2>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {/* DAY 1 */}
+                <div className="flex flex-col items-center text-center p-4 bg-slate-100 rounded-3xl border-2 border-slate-200">
+                  <span className="text-[10px] font-black uppercase text-slate-500 mb-2">Day 1</span>
+                  <div className="text-2xl mb-2">🇿🇦</div>
+                  <span className="text-xs font-bold uppercase italic leading-tight">SA Flag Colors</span>
+                </div>
+
+                {/* DAY 2 */}
+                <div className="flex flex-col items-center text-center p-4 bg-slate-100 rounded-3xl border-2 border-slate-200">
+                  <span className="text-[10px] font-black uppercase text-slate-500 mb-2">Day 2</span>
+                  <div className="w-8 h-8 rounded-full shadow-inner mb-2 bg-green-600 border-2 border-white"></div>
+                  <span className="text-xs font-bold uppercase italic">Green</span>
+                </div>
+
+                {/* DAY 3 */}
+                <div className="flex flex-col items-center text-center p-4 bg-slate-100 rounded-3xl border-2 border-slate-200">
+                  <span className="text-[10px] font-black uppercase text-slate-500 mb-2">Day 3</span>
+                  <div className="w-8 h-8 rounded-full shadow-inner mb-2 bg-black border-2 border-white"></div>
+                  <span className="text-xs font-bold uppercase italic">Black</span>
+                </div>
+
+                {/* COCKTAIL */}
+                <div className="flex flex-col items-center text-center p-4 bg-indigo-600 rounded-3xl shadow-lg text-white">
+                  <span className="text-[10px] font-black uppercase text-indigo-200 mb-2">Cocktail</span>
+                  <div className="w-8 h-8 rounded-full shadow-inner mb-2 bg-white border-2 border-indigo-300"></div>
+                  <span className="text-xs font-bold uppercase italic">White</span>
+                </div>
+              </div>
             </section>
 
             {/* SLIDO Q&A SECTION */}
