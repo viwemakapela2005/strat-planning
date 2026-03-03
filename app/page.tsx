@@ -74,7 +74,7 @@ export default function EventDashboard() {
                 <h2 className="text-2xl md:text-3xl font-black uppercase italic">About</h2>
               </div>
               <p className="text-slate-700 leading-relaxed font-semibold text-base md:text-lg">
-                Welcome to the Strategic Planning Session portal. Below you can participate in the Live Q&A, check the dress code, and access official documents.
+                Welcome to the Strategic Planning Session portal. Below you can participate in the Live Q&A, check the dress code, and access official documents. For Wi-Fi: Raddison_Guest, select 'Conferencing' then select Raddison_ICC. Password: ICC650
               </p>
             </section>
 
