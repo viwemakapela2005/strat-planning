@@ -21,6 +21,14 @@ export default function EventDashboard() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [openSubFolder, setOpenSubFolder] = useState<string | null>(null);
 
+  // CORE DOCUMENTS (SITTING OUTSIDE SUB-FOLDERS)
+  const CORE_DOCS: ResourceDocument[] = [
+    { name: "Event Programme", fileName: "programme.pdf", size: "1.5 MB" },
+    { name: "Annual Report 2024/2025", fileName: "annualreport.pdf", size: "4.2 MB" },
+    { name: "Resource Report", fileName: "resourcebook.pdf", size: "2.8 MB" },
+    { name: "Operational Report", fileName: "operational-report.pdf", size: "1.2 MB" },
+  ];
+
   const DAY1_DOCS: ResourceDocument[] = [
     { name: "Session Remarks: Mr Frikkie De Bruin", fileName: "sessionRemarks.pdf", size: "850 KB" },
     { name: "SAPU Message of Support", fileName: "sapu_mesOfSupport.pdf", size: "450 KB" },
@@ -38,7 +46,6 @@ export default function EventDashboard() {
     { name: "Employer: Ms Mmapitso Mashele", fileName: "protectingEmployer.pdf", size: "820 KB" },
   ];
 
-  // Helper component for the document rows to keep code clean
   const DocRow = ({ doc }: { doc: ResourceDocument }) => (
     <a
       href={`/docs/${doc.fileName}`}
@@ -142,7 +149,7 @@ export default function EventDashboard() {
               </div>
             </section>
 
-            {/* NESTED DOCUMENTS SECTION */}
+            {/* DOCUMENTS SECTION */}
             <div className="overflow-hidden bg-white/95 rounded-[2.5rem] shadow-2xl border border-white/40">
               <button
                 onClick={() => setActiveTab(activeTab === "docs" ? null : "docs")}
@@ -153,15 +160,22 @@ export default function EventDashboard() {
                     <FileText size={28} />
                   </div>
                   <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic">
-                    Event Documents
+                    Documents
                   </div>
                 </div>
                 <ChevronDown size={28} className={`transition-transform duration-300 ${activeTab === "docs" ? "rotate-180" : ""}`} />
               </button>
 
               {activeTab === "docs" && (
-                <div className="p-4 pt-0 space-y-4 bg-slate-50/50">
+                <div className="p-6 pt-0 space-y-4 bg-slate-50/50">
                   
+                  {/* MAIN DOCUMENTS (OUTSIDE) */}
+                  <div className="space-y-2">
+                    {CORE_DOCS.map((doc, i) => <DocRow key={i} doc={doc} />)}
+                  </div>
+
+                  <hr className="border-slate-200" />
+
                   {/* DAY 1 SUB-FOLDER */}
                   <div className="rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-sm">
                     <button 
@@ -170,7 +184,7 @@ export default function EventDashboard() {
                     >
                       <div className="flex items-center gap-3 text-indigo-700">
                         <CalendarDays size={20} />
-                        <span className="font-black uppercase italic tracking-wide">Day 1 Documents</span>
+                        <span className="font-black uppercase italic tracking-wide text-sm">Day 1 Presentations</span>
                       </div>
                       <ChevronDown size={20} className={`transition-transform ${openSubFolder === 'day1' ? 'rotate-180' : ''}`} />
                     </button>
@@ -189,7 +203,7 @@ export default function EventDashboard() {
                     >
                       <div className="flex items-center gap-3 text-indigo-700">
                         <CalendarDays size={20} />
-                        <span className="font-black uppercase italic tracking-wide">Day 2 Documents</span>
+                        <span className="font-black uppercase italic tracking-wide text-sm">Day 2 Presentations</span>
                       </div>
                       <ChevronDown size={20} className={`transition-transform ${openSubFolder === 'day2' ? 'rotate-180' : ''}`} />
                     </button>
