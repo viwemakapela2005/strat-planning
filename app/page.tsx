@@ -232,7 +232,7 @@ export default function EventDashboard() {
               {activeTab === "pics" && (
                 <div className="p-6 pt-0 space-y-3 bg-slate-50/50">
                   <a
-                    href="https://pscbcorgza-my.sharepoint.com/:f:/g/personal/viwem_pscbc_org_za/IgAxv_vLkQ5pQ5z9DFxBUAuDAajOcvs61Vl2JMnsd6tvgyw?e=fqYWui"
+                    href="https://"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-indigo-500 transition-all group"
@@ -245,7 +245,7 @@ export default function EventDashboard() {
                   </a>
 
                   <a
-                    href="https://pscbcorgza-my.sharepoint.com/:f:/g/personal/viwem_pscbc_org_za/IgDLcXAagsnQTZ1Ckv2TXxkmAZpqXmUy3NWFFdeV_GlgZ9M?e=B9sbG6"
+                    href=""
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-indigo-500 transition-all group"
