@@ -9,6 +9,8 @@ import {
   ChevronDown,
   Shirt,
   CalendarDays,
+  Image as ImageIcon,
+  ExternalLink,
 } from "lucide-react";
 
 interface ResourceDocument {
@@ -168,15 +170,10 @@ export default function EventDashboard() {
 
               {activeTab === "docs" && (
                 <div className="p-6 pt-0 space-y-4 bg-slate-50/50">
-                  
-                  {/* MAIN DOCUMENTS (OUTSIDE) */}
                   <div className="space-y-2">
                     {CORE_DOCS.map((doc, i) => <DocRow key={i} doc={doc} />)}
                   </div>
-
                   <hr className="border-slate-200" />
-
-                  {/* DAY 1 SUB-FOLDER */}
                   <div className="rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-sm">
                     <button 
                       onClick={() => setOpenSubFolder(openSubFolder === 'day1' ? null : 'day1')}
@@ -194,8 +191,6 @@ export default function EventDashboard() {
                       </div>
                     )}
                   </div>
-
-                  {/* DAY 2 SUB-FOLDER */}
                   <div className="rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-sm">
                     <button 
                       onClick={() => setOpenSubFolder(openSubFolder === 'day2' ? null : 'day2')}
@@ -213,7 +208,54 @@ export default function EventDashboard() {
                       </div>
                     )}
                   </div>
+                </div>
+              )}
+            </div>
 
+            {/* PICTURES SECTION */}
+            <div className="overflow-hidden bg-white/95 rounded-[2.5rem] shadow-2xl border border-white/40">
+              <button
+                onClick={() => setActiveTab(activeTab === "pics" ? null : "pics")}
+                className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white transition-all"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-4 bg-indigo-600 text-white rounded-2xl shadow-lg">
+                    <ImageIcon size={28} />
+                  </div>
+                  <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic">
+                    Pictures
+                  </div>
+                </div>
+                <ChevronDown size={28} className={`transition-transform duration-300 ${activeTab === "pics" ? "rotate-180" : ""}`} />
+              </button>
+
+              {activeTab === "pics" && (
+                <div className="p-6 pt-0 space-y-3 bg-slate-50/50">
+                  <a
+                    href="https://pscbcorgza-my.sharepoint.com/:f:/g/personal/viwem_pscbc_org_za/IgAxv_vLkQ5pQ5z9DFxBUAuDAajOcvs61Vl2JMnsd6tvgyw?e=fqYWui"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-indigo-500 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <CalendarDays size={20} className="text-indigo-600" />
+                      <span className="font-black text-slate-800 uppercase italic">Day 1 Pictures</span>
+                    </div>
+                    <ExternalLink size={20} className="text-indigo-500 group-hover:scale-110 transition-transform" />
+                  </a>
+
+                  <a
+                    href="https://pscbcorgza-my.sharepoint.com/:f:/g/personal/viwem_pscbc_org_za/IgDLcXAagsnQTZ1Ckv2TXxkmAZpqXmUy3NWFFdeV_GlgZ9M?e=B9sbG6"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-indigo-500 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <CalendarDays size={20} className="text-indigo-600" />
+                      <span className="font-black text-slate-800 uppercase italic">Day 2 Pictures</span>
+                    </div>
+                    <ExternalLink size={20} className="text-indigo-500 group-hover:scale-110 transition-transform" />
+                  </a>
                 </div>
               )}
             </div>
