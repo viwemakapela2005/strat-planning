@@ -80,7 +80,7 @@ export default function EventDashboard() {
           <div className="flex items-center gap-3">
             <Bell size={16} className="animate-bounce text-amber-300" />
             <span className="text-[11px] md:text-sm font-bold uppercase tracking-tight text-center">
-              Day 2: Strategic Planning Session is Live • Ask your questions in the Slido below
+              Day 3: Strategic Planning Session is Live • Ask your questions in the Slido below
             </span>
           </div>
         </div>
