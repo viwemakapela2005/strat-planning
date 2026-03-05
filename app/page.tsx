@@ -46,6 +46,12 @@ export default function EventDashboard() {
     { name: "Report: Mr Frikkie De Bruin", fileName: "protectingReport.pdf", size: "900 KB" },
     { name: "Labour: Thobja Monyai", fileName: "protectingLabour.pdf", size: "750 KB" },
     { name: "Employer: Ms Mmapitso Mashele", fileName: "protectingEmployer.pdf", size: "820 KB" },
+    { name: "Plenary Session 4: Embedding Good Governance & Public Service Professionalisation", fileName: "embeddedGoodGovernance.pdf", size: "1.4 MB" },
+    { name: "Labour: Embedding Good Governance & Public Service Professionalisation", fileName: "labourEmbedding.pdf", size: "890 KB" },
+    { name: "Employer: Embedding Good Governance & Public Service Professionalisation", fileName: "employerEmbedding.pdf", size: "910 KB" },
+    { name: "Plenary Session 5: Workforce Well-Being & Transformation Report", fileName: "reportWellBeing.pdf", size: "1.1 MB" },
+    { name: "Employer: Workforce Well-Being & Transformation", fileName: "employerWellbeing.pdf", size: "850 KB" },
+    { name: "Labour: Workforce Well-Being & Transformation", fileName: "labourWellbeing.pdf", size: "780 KB" },
   ];
 
   const DocRow = ({ doc }: { doc: ResourceDocument }) => (
