@@ -262,6 +262,19 @@ export default function EventDashboard() {
                     </div>
                     <ExternalLink size={20} className="text-indigo-500 group-hover:scale-110 transition-transform" />
                   </a>
+
+                  <a
+                    href="https://photos.app.goo.gl/SR3x3BipNk9xC6Pc9"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-indigo-500 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <CalendarDays size={20} className="text-indigo-600" />
+                      <span className="font-black text-slate-800 uppercase italic">Day 3 Pictures</span>
+                    </div>
+                    <ExternalLink size={20} className="text-indigo-500 group-hover:scale-110 transition-transform" />
+                  </a>
                 </div>
               )}
             </div>
