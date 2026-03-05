@@ -54,6 +54,12 @@ export default function EventDashboard() {
     { name: "Labour: Workforce Well-Being & Transformation", fileName: "labourWellbeing.pdf", size: "780 KB" },
   ];
 
+  const DAY3_DOCS: ResourceDocument[] = [
+    { name: "Report by GS: Future of Work, Technology and Digital Transformation", fileName: "gsFutureOfWork.pdf", size: "1.3 MB" },
+    { name: "Labour: Future of Work, Technology and Digital Transformation", fileName: "labFutureOfWork.pdf", size: "880 KB" },
+    { name: "Employer: Future of Work, Technology and Digital Transformation", fileName: "empFutureOfWork.pdf", size: "920 KB" },
+  ];
+
   const DocRow = ({ doc }: { doc: ResourceDocument }) => (
     <a
       href={`/docs/${doc.fileName}`}
@@ -180,6 +186,8 @@ export default function EventDashboard() {
                     {CORE_DOCS.map((doc, i) => <DocRow key={i} doc={doc} />)}
                   </div>
                   <hr className="border-slate-200" />
+                  
+                  {/* Day 1 Subfolder */}
                   <div className="rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-sm">
                     <button 
                       onClick={() => setOpenSubFolder(openSubFolder === 'day1' ? null : 'day1')}
@@ -197,6 +205,8 @@ export default function EventDashboard() {
                       </div>
                     )}
                   </div>
+
+                  {/* Day 2 Subfolder */}
                   <div className="rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-sm">
                     <button 
                       onClick={() => setOpenSubFolder(openSubFolder === 'day2' ? null : 'day2')}
@@ -211,6 +221,25 @@ export default function EventDashboard() {
                     {openSubFolder === 'day2' && (
                       <div className="p-4 pt-0 space-y-2 border-t border-slate-100">
                         {DAY2_DOCS.map((doc, i) => <DocRow key={i} doc={doc} />)}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Day 3 Subfolder */}
+                  <div className="rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-sm">
+                    <button 
+                      onClick={() => setOpenSubFolder(openSubFolder === 'day3' ? null : 'day3')}
+                      className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors"
+                    >
+                      <div className="flex items-center gap-3 text-indigo-700">
+                        <CalendarDays size={20} />
+                        <span className="font-black uppercase italic tracking-wide text-sm">Day 3 Presentations</span>
+                      </div>
+                      <ChevronDown size={20} className={`transition-transform ${openSubFolder === 'day3' ? 'rotate-180' : ''}`} />
+                    </button>
+                    {openSubFolder === 'day3' && (
+                      <div className="p-4 pt-0 space-y-2 border-t border-slate-100">
+                        {DAY3_DOCS.map((doc, i) => <DocRow key={i} doc={doc} />)}
                       </div>
                     )}
                   </div>
