@@ -92,7 +92,7 @@ export default function EventDashboard() {
           <div className="flex items-center gap-3">
             <Bell size={16} className="animate-bounce text-amber-300" />
             <span className="text-[11px] md:text-sm font-bold uppercase tracking-tight text-center">
-              Day 3: Strategic Planning Session is Live • Ask your questions in the Slido below
+              PSCBC Strategic Planning Session is over • Access documents and your pictures below. Thank you
             </span>
           </div>
         </div>
