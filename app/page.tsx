@@ -18,7 +18,11 @@ interface ResourceDocument {
   size: string;
 }
 
-export default function EventDashboard() {
+export default function Page() {
+  // 🚩 SET THIS TO true TO SHOW THE MAINTENANCE SCREEN
+  // 🚩 CHANGE THIS TO false WHEN YOUR BOSSES APPROVE THE PROJECT TO GO LIVE!
+  const IS_MAINTENANCE = true;
+
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [openSubFolder, setOpenSubFolder] = useState<boolean>(false);
 
@@ -72,6 +76,34 @@ export default function EventDashboard() {
     </a>
   );
 
+  // 1. MAINTENANCE SCREEN CONDITION
+  if (IS_MAINTENANCE) {
+    return (
+      <div className="min-h-screen flex items-center justify-center font-sans relative overflow-x-hidden p-6 text-center">
+        <div
+          className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('photo.jpeg')" }}
+        >
+          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[5px]"></div>
+        </div>
+
+        <div className="relative z-10 max-w-xl bg-white/95 backdrop-blur-md rounded-[2.5rem] p-8 md:p-12 border border-white/20 shadow-2xl flex flex-col items-center">
+          <img src="/logo.png" alt="Logo" className="h-24 md:h-32 w-auto mb-6 object-contain" />
+          <h1 className="text-2xl md:text-3xl font-black uppercase italic text-indigo-950 mb-4 tracking-tight">
+            AGM Portal Coming Soon
+          </h1>
+          <p className="text-slate-600 font-semibold text-base md:text-lg leading-relaxed mb-6">
+            The 2026 PSCBC Annual General Meeting resource platform is currently being finalized. Documents and media galleries will be available shortly.
+          </p>
+          <div className="w-full bg-slate-100 p-3 rounded-2xl text-xs md:text-sm border-l-4 border-indigo-600 text-left font-medium text-slate-700">
+            <strong>Wi-Fi Setup Ready:</strong> NH_Hotel_Guest • <strong>Password:</strong> NH650
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. LIVE EVENT DASHBOARD VIEW
   return (
     <div className="min-h-screen text-slate-900 pb-20 font-sans relative overflow-x-hidden text-left">
       <div
