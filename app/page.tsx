@@ -1,12 +1,17 @@
 "use client";
 
-import React, { useState } from 'react';
-import { 
-  FileText, Info, Bell, 
-  Download, ChevronDown
-} from 'lucide-react';
+import React, { useState } from "react";
+import {
+  FileText,
+  Info,
+  Bell,
+  Download,
+  ChevronDown,
+  CalendarDays,
+  Image as ImageIcon,
+  ExternalLink,
+} from "lucide-react";
 
-// TypeScript Interface for files
 interface ResourceDocument {
   name: string;
   fileName: string;
@@ -14,20 +19,67 @@ interface ResourceDocument {
 }
 
 export default function EventDashboard() {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<string | null>(null);
+  const [openSubFolder, setOpenSubFolder] = useState<string | null>(null);
 
-  // --- AGM DOCUMENTS LIBRARY ---
-  const DOCUMENTS_LIST: ResourceDocument[] = [
+  // CORE DOCUMENTS (SITTING OUTSIDE SUB-FOLDERS)
+  const CORE_DOCS: ResourceDocument[] = [
+    { name: "Event Programme", fileName: "programme.pdf", size: "1.5 MB" },
+    { name: "Annual Report 2024/2025", fileName: "annualreport.pdf", size: "4.2 MB" },
+    { name: "Resource Report", fileName: "resourcebook.pdf", size: "2.8 MB" },
     { name: "Operational Report", fileName: "operational-report.pdf", size: "1.2 MB" },
-    { name: "Financial Overview", fileName: "finance.pdf", size: "900 KB" },
-    { name: "Previous AGM Minutes", fileName: "agm-minutes-2025.pdf", size: "1.5 MB" },
   ];
+
+  const DAY1_DOCS: ResourceDocument[] = [
+    { name: "Session Remarks: Mr Frikkie De Bruin", fileName: "sessionRemarks.pdf", size: "850 KB" },
+    { name: "SAPU Message of Support", fileName: "sapu_mesOfSupport.pdf", size: "450 KB" },
+    { name: "FEDUSA Message of Support", fileName: "fedusa_mesOfSupport.pdf", size: "450 KB" },
+    { name: "COSATU Message of Support", fileName: "cosatu_mesOfSupport.pdf", size: "450 KB" },
+    { name: "Keynote Address by Hon. Inkosi Mzamo Buthelezi (MP)", fileName: "keynote.pdf", size: "1.2 MB" },
+    { name: "Plenary Session 1: State of the Organisation", fileName: "stateofOrg.pdf", size: "2.1 MB" },
+    { name: "Plenary Session 2: Vision, Mission and Core Values", fileName: "vissionandMission.pdf", size: "1.8 MB" },
+  ];
+
+  const DAY2_DOCS: ResourceDocument[] = [
+    { name: "Plenary Session 3: Protecting Collective Bargaining", fileName: "protectingCol_Bar.pdf", size: "1.5 MB" },
+    { name: "Report: Mr Frikkie De Bruin", fileName: "protectingReport.pdf", size: "900 KB" },
+    { name: "Labour: Thobja Monyai", fileName: "protectingLabour.pdf", size: "750 KB" },
+    { name: "Employer: Ms Mmapitso Mashele", fileName: "protectingEmployer.pdf", size: "820 KB" },
+    { name: "Plenary Session 4: Embedding Good Governance & Public Service Professionalisation", fileName: "embeddedGoodGovernance.pdf", size: "1.4 MB" },
+    { name: "Labour: Embedding Good Governance & Public Service Professionalisation", fileName: "labourEmbedding.pdf", size: "890 KB" },
+    { name: "Employer: Embedding Good Governance & Public Service Professionalisation", fileName: "employerEmbedding.pdf", size: "910 KB" },
+    { name: "Plenary Session 5: Workforce Well-Being & Transformation Report", fileName: "reportWellBeing.pdf", size: "1.1 MB" },
+    { name: "Employer: Workforce Well-Being & Transformation", fileName: "employerWellbeing.pdf", size: "850 KB" },
+    { name: "Labour: Workforce Well-Being & Transformation", fileName: "labourWellbeing.pdf", size: "780 KB" },
+  ];
+
+  const DAY3_DOCS: ResourceDocument[] = [
+    { name: "Report by GS: Future of Work, Technology and Digital Transformation", fileName: "gsFutureOfWork.pdf", size: "1.3 MB" },
+    { name: "Labour: Future of Work, Technology and Digital Transformation", fileName: "labFutureOfWork.pdf", size: "880 KB" },
+    { name: "Employer: Future of Work, Technology and Digital Transformation", fileName: "empFutureOfWork.pdf", size: "920 KB" },
+  ];
+
+  const DocRow = ({ doc }: { doc: ResourceDocument }) => (
+    <a
+      href={`/docs/${doc.fileName}`}
+      download
+      className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 hover:border-orange-500 hover:shadow-md transition-all group"
+    >
+      <div className="flex flex-col text-left">
+        <span className="font-bold text-slate-800 text-sm uppercase italic group-hover:text-orange-600 transition-colors">
+          {doc.name}
+        </span>
+        <span className="text-[10px] text-slate-400 uppercase font-black tracking-widest">
+          PDF • {doc.size}
+        </span>
+      </div>
+      <Download size={18} className="text-orange-500 group-hover:scale-110 transition-transform" />
+    </a>
+  );
 
   return (
     <div className="min-h-screen text-slate-900 pb-20 font-sans relative overflow-x-hidden text-left">
-      
-      {/* BACKGROUND LAYER */}
-      <div 
+      <div
         className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('photo.jpeg')" }}
       >
@@ -35,116 +87,191 @@ export default function EventDashboard() {
       </div>
 
       <div className="relative z-10">
-        
-        {/* TOP ANNOUNCEMENT BAR */}
         <div className="bg-indigo-700/90 backdrop-blur-xl text-white px-4 py-3 flex items-center justify-center shadow-2xl sticky top-0 z-50 border-b border-white/10">
           <div className="flex items-center gap-3">
             <Bell size={16} className="animate-bounce text-amber-300" />
-            <span className="text-[11px] md:text-sm font-bold uppercase tracking-tight">
-              PSCBC Annual General Meeting 2026 is Live
+            <span className="text-[11px] md:text-sm font-bold uppercase tracking-tight text-center">
+              Day 3: Strategic Planning Session is Live • Ask your questions in the Slido below
             </span>
           </div>
         </div>
 
         <main className="max-w-4xl mx-auto px-4 md:px-6 mt-8 md:mt-12">
-          
-          {/* HEADER */}
-          <header className="mb-10 text-center flex flex-col items-center justify-center gap-4">
-            <div className="flex items-center justify-center gap-4 flex-wrap">
-              <img 
-                src="/logo.png" 
-                alt="Logo" 
-                className="h-16 md:h-24 w-auto drop-shadow-2xl object-contain"
-                onError={(e) => {
-                  const target = e.currentTarget as HTMLImageElement;
-                  target.style.display = 'none';
-                }} 
-              />
-              <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-white uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
-                PSCBC EVENTS
-              </h1>
-            </div>
-            
+          <header className="mb-10 text-center flex flex-col items-center justify-center gap-6">
+            <img src="/logo.png" alt="Logo" className="h-32 md:h-48 w-auto drop-shadow-2xl object-contain" />
+            <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-white uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
+              PSCBC EVENTS
+            </h1>
             <div className="inline-block px-5 py-1.5 bg-indigo-600/40 backdrop-blur-md rounded-xl border border-indigo-400/30">
               <p className="text-indigo-100 text-lg md:text-2xl font-black tracking-[0.25em] uppercase italic">
-                Annual General Meeting (AGM)
+                Strategic Planning Session
               </p>
             </div>
           </header>
 
-          {/* MAIN CONTENT */}
           <div className="space-y-5">
-            
-            {/* ABOUT & THE PROGRAMME DOWNLOAD */}
+            {/* ABOUT SECTION */}
             <section className="bg-white/95 backdrop-blur-md rounded-[2.5rem] p-7 md:p-10 border border-white/40 shadow-2xl">
               <div className="flex items-center gap-3 mb-4 text-indigo-700">
                 <Info size={28} />
-                <h2 className="text-2xl md:text-3xl font-black uppercase italic">About the Event</h2>
+                <h2 className="text-2xl md:text-3xl font-black uppercase italic">About</h2>
               </div>
-              <p className="text-slate-700 leading-relaxed mb-8 font-semibold text-base md:text-lg">
-                Welcome to the official 2026 PSCBC Annual General Meeting. Use the portal below to quickly access and download critical official resources and session schedules directly to your device.
+              <p className="text-slate-700 leading-relaxed font-semibold text-base md:text-lg">
+                Welcome to the Strategic Planning Session portal. Below you can participate in the Live Q&A, check the dress code, and access official documents. 
+                <br /><br />
+                <span className="bg-slate-100 p-2 rounded-lg text-sm border-l-4 border-indigo-600">
+                  <strong>Wi-Fi:</strong> Radisson_Guest • <strong>Option:</strong> Conferencing • <strong>Network:</strong> Radisson_ICC • <strong>Password:</strong> ICC650
+                </span>
               </p>
-              
-              {/* THE PROGRAMME DIRECT DOWNLOAD BUTTON */}
-              <div className="space-y-3">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Official Schedule:</p>
-                <a 
-                  href="/docs/programme.pdf" 
-                  download="PSCBC_AGM_Programme_2026.pdf" 
-                  className="flex items-center justify-between p-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-3xl transition-all shadow-lg group active:scale-95"
-                >
-                  <div className="flex items-center gap-4 text-left">
-                    <div className="p-3 bg-white/20 rounded-2xl">
-                      <FileText size={24} />
-                    </div>
-                    <div>
-                      <p className="font-black uppercase italic text-lg leading-none">AGM Programme</p>
-                      <p className="text-indigo-200 text-xs mt-1 font-bold uppercase tracking-wider">Download PDF • Click to Save</p>
-                    </div>
-                  </div>
-                  <Download size={28} className="group-hover:translate-y-1 transition-transform" />
-                </a>
-              </div>
             </section>
 
-            {/* RESOURCE DOCUMENTS DROPDOWN */}
-            <div className="overflow-hidden bg-white/95 rounded-3xl shadow-2xl">
-              <button 
-                onClick={() => setIsOpen(!isOpen)} 
+            {/* DOCUMENTS SECTION */}
+            <div className="overflow-hidden bg-white/95 rounded-[2.5rem] shadow-2xl border border-white/40">
+              <button
+                onClick={() => setActiveTab(activeTab === "docs" ? null : "docs")}
                 className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white transition-all"
               >
-                <div className="flex items-center gap-4 md:gap-6">
-                  <div className="p-4 bg-orange-500 text-white rounded-2xl shadow-lg shadow-orange-500/30">
+                <div className="flex items-center gap-4">
+                  <div className="p-4 bg-orange-500 text-white rounded-2xl shadow-lg">
                     <FileText size={28} />
                   </div>
-                  <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic">Resource Documents</div>
+                  <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic">
+                    Documents
+                  </div>
                 </div>
-                <ChevronDown size={28} className={`transition-transform duration-500 ${isOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown size={28} className={`transition-transform duration-300 ${activeTab === "docs" ? "rotate-180" : ""}`} />
               </button>
-              
-              {isOpen && (
-                <div className="p-6 pt-0 border-t space-y-3 bg-slate-50/50">
-                  {DOCUMENTS_LIST.map((doc, index) => (
-                    <a 
-                      key={index}
-                      href={`/docs/${doc.fileName}`} 
-                      download={doc.fileName}
-                      className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-orange-500 transition-all group"
+
+              {activeTab === "docs" && (
+                <div className="p-6 pt-0 space-y-4 bg-slate-50/50">
+                  <div className="space-y-2">
+                    {CORE_DOCS.map((doc, i) => <DocRow key={i} doc={doc} />)}
+                  </div>
+                  <hr className="border-slate-200" />
+                  
+                  {/* Day 1 Subfolder */}
+                  <div className="rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-sm">
+                    <button 
+                      onClick={() => setOpenSubFolder(openSubFolder === 'day1' ? null : 'day1')}
+                      className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors"
                     >
-                      <div className="flex flex-col text-left">
-                        <span className="font-black text-slate-800 uppercase italic">{doc.name}</span>
-                        <span className="text-[10px] text-slate-400 uppercase font-black tracking-widest">{doc.size} • Download</span>
+                      <div className="flex items-center gap-3 text-indigo-700">
+                        <CalendarDays size={20} />
+                        <span className="font-black uppercase italic tracking-wide text-sm">Day 1 Presentations</span>
                       </div>
-                      <Download size={20} className="text-orange-500 group-hover:scale-125 transition-transform" />
-                    </a>
-                  ))}
+                      <ChevronDown size={20} className={`transition-transform ${openSubFolder === 'day1' ? 'rotate-180' : ''}`} />
+                    </button>
+                    {openSubFolder === 'day1' && (
+                      <div className="p-4 pt-0 space-y-2 border-t border-slate-100">
+                        {DAY1_DOCS.map((doc, i) => <DocRow key={i} doc={doc} />)}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Day 2 Subfolder */}
+                  <div className="rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-sm">
+                    <button 
+                      onClick={() => setOpenSubFolder(openSubFolder === 'day2' ? null : 'day2')}
+                      className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors"
+                    >
+                      <div className="flex items-center gap-3 text-indigo-700">
+                        <CalendarDays size={20} />
+                        <span className="font-black uppercase italic tracking-wide text-sm">Day 2 Presentations</span>
+                      </div>
+                      <ChevronDown size={20} className={`transition-transform ${openSubFolder === 'day2' ? 'rotate-180' : ''}`} />
+                    </button>
+                    {openSubFolder === 'day2' && (
+                      <div className="p-4 pt-0 space-y-2 border-t border-slate-100">
+                        {DAY2_DOCS.map((doc, i) => <DocRow key={i} doc={doc} />)}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Day 3 Subfolder */}
+                  <div className="rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-sm">
+                    <button 
+                      onClick={() => setOpenSubFolder(openSubFolder === 'day3' ? null : 'day3')}
+                      className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors"
+                    >
+                      <div className="flex items-center gap-3 text-indigo-700">
+                        <CalendarDays size={20} />
+                        <span className="font-black uppercase italic tracking-wide text-sm">Day 3 Presentations</span>
+                      </div>
+                      <ChevronDown size={20} className={`transition-transform ${openSubFolder === 'day3' ? 'rotate-180' : ''}`} />
+                    </button>
+                    {openSubFolder === 'day3' && (
+                      <div className="p-4 pt-0 space-y-2 border-t border-slate-100">
+                        {DAY3_DOCS.map((doc, i) => <DocRow key={i} doc={doc} />)}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
 
-          </div> {/* Closing Main Content Area */}
+            {/* PICTURES SECTION */}
+            <div className="overflow-hidden bg-white/95 rounded-[2.5rem] shadow-2xl border border-white/40">
+              <button
+                onClick={() => setActiveTab(activeTab === "pics" ? null : "pics")}
+                className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white transition-all"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-4 bg-indigo-600 text-white rounded-2xl shadow-lg">
+                    <ImageIcon size={28} />
+                  </div>
+                  <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic">
+                    Pictures
+                  </div>
+                </div>
+                <ChevronDown size={28} className={`transition-transform duration-300 ${activeTab === "pics" ? "rotate-180" : ""}`} />
+              </button>
+
+              {activeTab === "pics" && (
+                <div className="p-6 pt-0 space-y-3 bg-slate-50/50">
+                  <a
+                    href="https://photos.app.goo.gl/55pm9Vhjg8Bc2L8P7"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-indigo-500 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <CalendarDays size={20} className="text-indigo-600" />
+                      <span className="font-black text-slate-800 uppercase italic">Day 1 Pictures</span>
+                    </div>
+                    <ExternalLink size={20} className="text-indigo-500 group-hover:scale-110 transition-transform" />
+                  </a>
+
+                  <a
+                    href="https://photos.app.goo.gl/5UwbvFPdjqSEjWau6"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-indigo-500 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <CalendarDays size={20} className="text-indigo-600" />
+                      <span className="font-black text-slate-800 uppercase italic">Day 2 Pictures</span>
+                    </div>
+                    <ExternalLink size={20} className="text-indigo-500 group-hover:scale-110 transition-transform" />
+                  </a>
+
+                  <a
+                    href="https://photos.app.goo.gl/SR3x3BipNk9xC6Pc9"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-indigo-500 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <CalendarDays size={20} className="text-indigo-600" />
+                      <span className="font-black text-slate-800 uppercase italic">Day 3 Pictures</span>
+                    </div>
+                    <ExternalLink size={20} className="text-indigo-500 group-hover:scale-110 transition-transform" />
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
         </main>
       </div>
-    </div> 
+    </div>
   );
 }
