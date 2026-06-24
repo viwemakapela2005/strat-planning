@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState } from 'react';
 import { 
-  FileText, Info, Shirt, Bell, 
-  Download, ChevronDown, Send, Mail
+  FileText, Info, Bell, 
+  Download, ChevronDown
 } from 'lucide-react';
 
 // TypeScript Interface for files
@@ -14,33 +14,14 @@ interface ResourceDocument {
 }
 
 export default function EventDashboard() {
-  const [activeTab, setActiveTab] = useState<string | null>(null);
-  const [question, setQuestion] = useState<string>("");
-
-  // --- CONFIGURATION ---
-  const YOUR_EMAIL = "viwem@pscbc.org.za";
-  const EVENT_SUBJECT = "PSCBC AGM 2026 Question";
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   // --- AGM DOCUMENTS LIBRARY ---
-  // Add your files here and they will automatically appear in the "Documents" dropdown
   const DOCUMENTS_LIST: ResourceDocument[] = [
     { name: "Operational Report", fileName: "operational-report.pdf", size: "1.2 MB" },
     { name: "Financial Overview", fileName: "finance.pdf", size: "900 KB" },
     { name: "Previous AGM Minutes", fileName: "agm-minutes-2025.pdf", size: "1.5 MB" },
   ];
-
-  const toggleTab = (tab: string) => {
-    setActiveTab(activeTab === tab ? null : tab);
-  };
-
-  const handleEmailSend = () => {
-    if (!question.trim()) return alert("Please type a question first!");
-    const subject = encodeURIComponent(EVENT_SUBJECT);
-    const body = encodeURIComponent(question);
-    const mailtoUrl = `mailto:${YOUR_EMAIL}?subject=${subject}&body=${body}`;
-    window.location.href = mailtoUrl;
-    setQuestion("");
-  };
 
   return (
     <div className="min-h-screen text-slate-900 pb-20 font-sans relative overflow-x-hidden text-left">
@@ -101,7 +82,7 @@ export default function EventDashboard() {
                 <h2 className="text-2xl md:text-3xl font-black uppercase italic">About the Event</h2>
               </div>
               <p className="text-slate-700 leading-relaxed mb-8 font-semibold text-base md:text-lg">
-                Welcome to the official 2026 PSCBC Annual General Meeting. Use the portal below to download critical resources, view event schedules, and submit direct queries to the Secretariat panel.
+                Welcome to the official 2026 PSCBC Annual General Meeting. Use the portal below to quickly access and download critical official resources and session schedules directly to your device.
               </p>
               
               {/* THE PROGRAMME DIRECT DOWNLOAD BUTTON */}
@@ -126,104 +107,41 @@ export default function EventDashboard() {
               </div>
             </section>
 
-            {/* SHIRT COLOURS */}
-            <section className="bg-white/95 backdrop-blur-md border border-white/40 rounded-[2.5rem] p-7 md:p-8 shadow-2xl">
-              <div className="flex items-center gap-3 mb-6 text-slate-800">
-                <Shirt size={28} />
-                <h2 className="text-xl md:text-2xl font-black uppercase italic tracking-tighter">Shirt Colours</h2>
-              </div>
-              <div className="grid grid-cols-3 gap-3 md:gap-6 text-center">
-                <div className="p-3 md:p-6 rounded-3xl bg-blue-50/80 border border-blue-100">
-                  <p className="text-[10px] md:text-sm font-black text-blue-700 uppercase mb-3 tracking-widest text-center">Tue</p>
-                  <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-600 rounded-full shadow-lg border-4 border-white mx-auto"></div>
-                  <p className="font-black text-blue-900 text-xs md:text-lg mt-3 uppercase tracking-tighter">Blue</p>
+            {/* RESOURCE DOCUMENTS DROPDOWN */}
+            <div className="overflow-hidden bg-white/95 rounded-3xl shadow-2xl">
+              <button 
+                onClick={() => setIsOpen(!isOpen)} 
+                className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white transition-all"
+              >
+                <div className="flex items-center gap-4 md:gap-6">
+                  <div className="p-4 bg-orange-500 text-white rounded-2xl shadow-lg shadow-orange-500/30">
+                    <FileText size={28} />
+                  </div>
+                  <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic">Resource Documents</div>
                 </div>
-                <div className="p-3 md:p-6 rounded-3xl bg-slate-50/80 border border-slate-200">
-                  <p className="text-[10px] md:text-sm font-black text-slate-400 uppercase mb-3 tracking-widest text-center">Wed</p>
-                  <div className="w-12 h-12 md:w-16 md:h-16 bg-white border-4 border-slate-200 rounded-full shadow-lg mx-auto"></div>
-                  <p className="font-black text-slate-800 text-xs md:text-lg mt-3 uppercase tracking-tighter">White</p>
-                </div>
-                <div className="p-3 md:p-6 rounded-3xl bg-green-50/80 border border-green-100">
-                  <p className="text-[10px] md:text-sm font-black text-green-700 uppercase mb-3 tracking-widest text-center">Thu</p>
-                  <div className="w-12 h-12 md:w-16 md:h-16 bg-green-600 rounded-full shadow-lg border-4 border-white mx-auto"></div>
-                  <p className="font-black text-green-900 text-xs md:text-lg mt-3 uppercase tracking-tighter">Green</p>
-                </div>
-              </div>
-            </section>
-
-            {/* DROPDOWNS (DOCUMENTS & Q&A ONLY) */}
-            <div className="space-y-4">
+                <ChevronDown size={28} className={`transition-transform duration-500 ${isOpen ? 'rotate-180' : ''}`} />
+              </button>
               
-              {/* RESOURCE DOCUMENTS */}
-              <div className="overflow-hidden bg-white/95 rounded-3xl shadow-2xl">
-                <button 
-                  onClick={() => toggleTab('docs')} 
-                  className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white transition-all"
-                >
-                  <div className="flex items-center gap-4 md:gap-6">
-                    <div className="p-4 bg-orange-500 text-white rounded-2xl shadow-lg shadow-orange-500/30">
-                      <FileText size={28} />
-                    </div>
-                    <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic">Documents</div>
-                  </div>
-                  <ChevronDown size={28} className={`transition-transform duration-500 ${activeTab === 'docs' ? 'rotate-180' : ''}`} />
-                </button>
-                
-                {activeTab === 'docs' && (
-                  <div className="p-6 pt-0 border-t space-y-3 bg-slate-50/50">
-                    {DOCUMENTS_LIST.map((doc, index) => (
-                      <a 
-                        key={index}
-                        href={`/docs/${doc.fileName}`} 
-                        download={doc.fileName}
-                        className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-orange-500 transition-all group"
-                      >
-                        <div className="flex flex-col text-left">
-                          <span className="font-black text-slate-800 uppercase italic">{doc.name}</span>
-                          <span className="text-[10px] text-slate-400 uppercase font-black tracking-widest">{doc.size} • Download</span>
-                        </div>
-                        <Download size={20} className="text-orange-500 group-hover:scale-125 transition-transform" />
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* QA FACILITY */}
-              <div className="overflow-hidden bg-white/95 rounded-3xl shadow-2xl">
-                <button 
-                  onClick={() => toggleTab('qa')} 
-                  className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white transition-all"
-                >
-                  <div className="flex items-center gap-4 md:gap-6">
-                    <div className="p-4 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-500/30">
-                      <Mail size={28} />
-                    </div>
-                    <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic">Q & A Facility</div>
-                  </div>
-                  <ChevronDown size={28} className={`transition-transform duration-500 ${activeTab === 'qa' ? 'rotate-180' : ''}`} />
-                </button>
-                {activeTab === 'qa' && (
-                  <div className="p-6 pt-0 border-t bg-slate-50/50">
-                    <p className="text-[10px] font-black text-slate-400 my-4 uppercase tracking-widest text-left">Sent to Secretariat via Email:</p>
-                    <textarea 
-                      className="w-full p-5 bg-white border-2 border-slate-200 rounded-2xl focus:border-blue-600 outline-none text-base font-medium mb-4" 
-                      rows={3} 
-                      placeholder="Type your question for the panel here..."
-                      value={question}
-                      onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setQuestion(e.target.value)}
-                    ></textarea>
-                    <button 
-                      onClick={handleEmailSend}
-                      className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:bg-blue-700 shadow-xl transition-all active:scale-95 uppercase italic"
+              {isOpen && (
+                <div className="p-6 pt-0 border-t space-y-3 bg-slate-50/50">
+                  {DOCUMENTS_LIST.map((doc, index) => (
+                    <a 
+                      key={index}
+                      href={`/docs/${doc.fileName}`} 
+                      download={doc.fileName}
+                      className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-orange-500 transition-all group"
                     >
-                      <Send size={20} /> Submit Question
-                    </button>
-                  </div>
-                )}
-              </div>
+                      <div className="flex flex-col text-left">
+                        <span className="font-black text-slate-800 uppercase italic">{doc.name}</span>
+                        <span className="text-[10px] text-slate-400 uppercase font-black tracking-widest">{doc.size} • Download</span>
+                      </div>
+                      <Download size={20} className="text-orange-500 group-hover:scale-125 transition-transform" />
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
 
-            </div> {/* Closing Dropdowns Container */}
           </div> {/* Closing Main Content Area */}
         </main>
       </div>
