@@ -91,7 +91,7 @@ export default function EventDashboard() {
           <div className="flex items-center gap-3">
             <Bell size={16} className="animate-bounce text-amber-300" />
             <span className="text-[11px] md:text-sm font-bold uppercase tracking-tight text-center">
-              Day 3: Strategic Planning Session is Live • Ask your questions in the Slido below
+              THE PSCBC WELCOMES YOU TO THE 29th ANNUAL GENERAL MEETING. 
             </span>
           </div>
         </div>
@@ -104,7 +104,7 @@ export default function EventDashboard() {
             </h1>
             <div className="inline-block px-5 py-1.5 bg-indigo-600/40 backdrop-blur-md rounded-xl border border-indigo-400/30">
               <p className="text-indigo-100 text-lg md:text-2xl font-black tracking-[0.25em] uppercase italic">
-                Strategic Planning Session
+                2026 ANNUAL GENERAL MEETING
               </p>
             </div>
           </header>
