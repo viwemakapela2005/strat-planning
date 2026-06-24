@@ -20,7 +20,7 @@ interface ResourceDocument {
 
 export default function EventDashboard() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
-  const [openSubFolder, setOpenSubFolder] = useState<string | null>(null);
+  const [openSubFolder, setOpenSubFolder] = useState<boolean>(false);
 
   // CORE DOCUMENTS (SITTING OUTSIDE SUB-FOLDERS)
   const CORE_DOCS: ResourceDocument[] = [
@@ -30,7 +30,8 @@ export default function EventDashboard() {
     { name: "Operational Report", fileName: "operational-report.pdf", size: "1.2 MB" },
   ];
 
-  const DAY1_DOCS: ResourceDocument[] = [
+  // CONSOLIDATED PRESENTATIONS FOR A 1-DAY EVENT
+  const PRESENTATION_DOCS: ResourceDocument[] = [
     { name: "Session Remarks: Mr Frikkie De Bruin", fileName: "sessionRemarks.pdf", size: "850 KB" },
     { name: "SAPU Message of Support", fileName: "sapu_mesOfSupport.pdf", size: "450 KB" },
     { name: "FEDUSA Message of Support", fileName: "fedusa_mesOfSupport.pdf", size: "450 KB" },
@@ -38,9 +39,6 @@ export default function EventDashboard() {
     { name: "Keynote Address by Hon. Inkosi Mzamo Buthelezi (MP)", fileName: "keynote.pdf", size: "1.2 MB" },
     { name: "Plenary Session 1: State of the Organisation", fileName: "stateofOrg.pdf", size: "2.1 MB" },
     { name: "Plenary Session 2: Vision, Mission and Core Values", fileName: "vissionandMission.pdf", size: "1.8 MB" },
-  ];
-
-  const DAY2_DOCS: ResourceDocument[] = [
     { name: "Plenary Session 3: Protecting Collective Bargaining", fileName: "protectingCol_Bar.pdf", size: "1.5 MB" },
     { name: "Report: Mr Frikkie De Bruin", fileName: "protectingReport.pdf", size: "900 KB" },
     { name: "Labour: Thobja Monyai", fileName: "protectingLabour.pdf", size: "750 KB" },
@@ -51,9 +49,6 @@ export default function EventDashboard() {
     { name: "Plenary Session 5: Workforce Well-Being & Transformation Report", fileName: "reportWellBeing.pdf", size: "1.1 MB" },
     { name: "Employer: Workforce Well-Being & Transformation", fileName: "employerWellbeing.pdf", size: "850 KB" },
     { name: "Labour: Workforce Well-Being & Transformation", fileName: "labourWellbeing.pdf", size: "780 KB" },
-  ];
-
-  const DAY3_DOCS: ResourceDocument[] = [
     { name: "Report by GS: Future of Work, Technology and Digital Transformation", fileName: "gsFutureOfWork.pdf", size: "1.3 MB" },
     { name: "Labour: Future of Work, Technology and Digital Transformation", fileName: "labFutureOfWork.pdf", size: "880 KB" },
     { name: "Employer: Future of Work, Technology and Digital Transformation", fileName: "empFutureOfWork.pdf", size: "920 KB" },
@@ -91,7 +86,7 @@ export default function EventDashboard() {
           <div className="flex items-center gap-3">
             <Bell size={16} className="animate-bounce text-amber-300" />
             <span className="text-[11px] md:text-sm font-bold uppercase tracking-tight text-center">
-              THE PSCBC WELCOMES YOU TO THE 29th ANNUAL GENERAL MEETING. 
+              THE PSCBC WELCOMES YOU TO THE 29th ANNUAL GENERAL MEETING.
             </span>
           </div>
         </div>
@@ -149,59 +144,21 @@ export default function EventDashboard() {
                   </div>
                   <hr className="border-slate-200" />
                   
-                  {/* Day 1 Subfolder */}
+                  {/* Single Consolidated Presentations Subfolder */}
                   <div className="rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-sm">
                     <button 
-                      onClick={() => setOpenSubFolder(openSubFolder === 'day1' ? null : 'day1')}
+                      onClick={() => setOpenSubFolder(!openSubFolder)}
                       className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors"
                     >
                       <div className="flex items-center gap-3 text-indigo-700">
                         <CalendarDays size={20} />
-                        <span className="font-black uppercase italic tracking-wide text-sm">Day 1 Presentations</span>
+                        <span className="font-black uppercase italic tracking-wide text-sm">Meeting Presentations</span>
                       </div>
-                      <ChevronDown size={20} className={`transition-transform ${openSubFolder === 'day1' ? 'rotate-180' : ''}`} />
+                      <ChevronDown size={20} className={`transition-transform ${openSubFolder ? 'rotate-180' : ''}`} />
                     </button>
-                    {openSubFolder === 'day1' && (
+                    {openSubFolder && (
                       <div className="p-4 pt-0 space-y-2 border-t border-slate-100">
-                        {DAY1_DOCS.map((doc, i) => <DocRow key={i} doc={doc} />)}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Day 2 Subfolder */}
-                  <div className="rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-sm">
-                    <button 
-                      onClick={() => setOpenSubFolder(openSubFolder === 'day2' ? null : 'day2')}
-                      className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors"
-                    >
-                      <div className="flex items-center gap-3 text-indigo-700">
-                        <CalendarDays size={20} />
-                        <span className="font-black uppercase italic tracking-wide text-sm">Day 2 Presentations</span>
-                      </div>
-                      <ChevronDown size={20} className={`transition-transform ${openSubFolder === 'day2' ? 'rotate-180' : ''}`} />
-                    </button>
-                    {openSubFolder === 'day2' && (
-                      <div className="p-4 pt-0 space-y-2 border-t border-slate-100">
-                        {DAY2_DOCS.map((doc, i) => <DocRow key={i} doc={doc} />)}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Day 3 Subfolder */}
-                  <div className="rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-sm">
-                    <button 
-                      onClick={() => setOpenSubFolder(openSubFolder === 'day3' ? null : 'day3')}
-                      className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors"
-                    >
-                      <div className="flex items-center gap-3 text-indigo-700">
-                        <CalendarDays size={20} />
-                        <span className="font-black uppercase italic tracking-wide text-sm">Day 3 Presentations</span>
-                      </div>
-                      <ChevronDown size={20} className={`transition-transform ${openSubFolder === 'day3' ? 'rotate-180' : ''}`} />
-                    </button>
-                    {openSubFolder === 'day3' && (
-                      <div className="p-4 pt-0 space-y-2 border-t border-slate-100">
-                        {DAY3_DOCS.map((doc, i) => <DocRow key={i} doc={doc} />)}
+                        {PRESENTATION_DOCS.map((doc, i) => <DocRow key={i} doc={doc} />)}
                       </div>
                     )}
                   </div>
@@ -235,34 +192,8 @@ export default function EventDashboard() {
                     className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-indigo-500 transition-all group"
                   >
                     <div className="flex items-center gap-3">
-                      <CalendarDays size={20} className="text-indigo-600" />
-                      <span className="font-black text-slate-800 uppercase italic">Day 1 Pictures</span>
-                    </div>
-                    <ExternalLink size={20} className="text-indigo-500 group-hover:scale-110 transition-transform" />
-                  </a>
-
-                  <a
-                    href="https://photos.app.goo.gl/5UwbvFPdjqSEjWau6"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-indigo-500 transition-all group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <CalendarDays size={20} className="text-indigo-600" />
-                      <span className="font-black text-slate-800 uppercase italic">Day 2 Pictures</span>
-                    </div>
-                    <ExternalLink size={20} className="text-indigo-500 group-hover:scale-110 transition-transform" />
-                  </a>
-
-                  <a
-                    href="https://photos.app.goo.gl/SR3x3BipNk9xC6Pc9"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-indigo-500 transition-all group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <CalendarDays size={20} className="text-indigo-600" />
-                      <span className="font-black text-slate-800 uppercase italic">Day 3 Pictures</span>
+                      <ImageIcon size={20} className="text-indigo-600" />
+                      <span className="font-black text-slate-800 uppercase italic">View AGM Shared Gallery</span>
                     </div>
                     <ExternalLink size={20} className="text-indigo-500 group-hover:scale-110 transition-transform" />
                   </a>
