@@ -117,10 +117,10 @@ export default function EventDashboard() {
                 <h2 className="text-2xl md:text-3xl font-black uppercase italic">About</h2>
               </div>
               <p className="text-slate-700 leading-relaxed font-semibold text-base md:text-lg">
-                Welcome to the Strategic Planning Session portal. Below you can participate in the Live Q&A, check the dress code, and access official documents. 
+                Welcome to the 2026 PSCBC Annual General Meeting. Below you can access official documents, as well as view and download pictures taken during the meeting.  
                 <br /><br />
                 <span className="bg-slate-100 p-2 rounded-lg text-sm border-l-4 border-indigo-600">
-                  <strong>Wi-Fi:</strong> Radisson_Guest • <strong>Option:</strong> Conferencing • <strong>Network:</strong> Radisson_ICC • <strong>Password:</strong> ICC650
+                  <strong>Wi-Fi:</strong> NH_Hotel_Guest • <strong>Password:</strong> NH650
                 </span>
               </p>
             </section>
