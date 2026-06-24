@@ -21,7 +21,7 @@ interface ResourceDocument {
 export default function Page() {
   // 🚩 SET THIS TO true TO SHOW THE MAINTENANCE SCREEN
   // 🚩 CHANGE THIS TO false WHEN YOUR BOSSES APPROVE THE PROJECT TO GO LIVE!
-  const IS_MAINTENANCE = false;
+  const IS_MAINTENANCE = true;
 
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [openSubFolder, setOpenSubFolder] = useState<boolean>(false);
