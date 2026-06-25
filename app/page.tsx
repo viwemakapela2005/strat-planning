@@ -218,7 +218,7 @@ export default function Page() {
               {activeTab === "pics" && (
                 <div className="p-6 pt-0 space-y-3 bg-slate-50/50">
                   <a
-                    href="https://photos.app.goo.gl/55pm9Vhjg8Bc2L8P7"
+                    href="https://photos.app.goo.gl/TQ1XseexzkDBgEn36"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-indigo-500 transition-all group"
