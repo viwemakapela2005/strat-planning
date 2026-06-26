@@ -36,9 +36,9 @@ export default function Page() {
 
   // UPDATED PRESENTATIONS SUBFOLDER (EXTRACTED FROM image_d67866.png)
   const PRESENTATION_DOCS: ResourceDocument[] = [
-    { name: "AGM Agency Fee Presentation 2026 F", fileName: "agm_agency_fee_presentation_2026_f.pptx", size: "1.2 MB" },
-    { name: "AGM Annual Report Presentation", fileName: "agm_annual_report_presentation.pptx", size: "2.1 MB" },
-    { name: "Vote Weights Presentation - 29th PSCBC AGM (F)", fileName: "vote_weights_presentation_29th_pscbc_agm_f.pptx", size: "1.8 MB" },
+    { name: "AGM Agency Fee Presentation 2026 ", fileName: "AGM Agency Fee Presentation 2026.pptx", size: "1.2 MB" },
+    { name: "AGM Annual Report Presentation", fileName: "AGM Annual Report Presentation.pptx", size: "2.1 MB" },
+    { name: "Vote Weights Presentation - 29th PSCBC AGM", fileName: "Vote Weights Presentation - 29th PSCBC AGM.pptx", size: "1.8 MB" },
   ];
 
   const DocRow = ({ doc }: { doc: ResourceDocument }) => {
