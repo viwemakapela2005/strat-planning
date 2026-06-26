@@ -62,17 +62,17 @@ export default function Page() {
     <a
       href={`/docs/${doc.fileName}`}
       download
-      className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 hover:border-orange-500 hover:shadow-md transition-all group"
+      className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 hover:border-emerald-500 hover:shadow-md transition-all group"
     >
       <div className="flex flex-col text-left">
-        <span className="font-bold text-slate-800 text-sm uppercase italic group-hover:text-orange-600 transition-colors">
+        <span className="font-bold text-slate-800 text-sm uppercase italic group-hover:text-emerald-600 transition-colors">
           {doc.name}
         </span>
         <span className="text-[10px] text-slate-400 uppercase font-black tracking-widest">
           PDF • {doc.size}
         </span>
       </div>
-      <Download size={18} className="text-orange-500 group-hover:scale-110 transition-transform" />
+      <Download size={18} className="text-emerald-500 group-hover:scale-110 transition-transform" />
     </a>
   );
 
@@ -156,13 +156,13 @@ export default function Page() {
             <div className="overflow-hidden bg-white/95 rounded-[2.5rem] shadow-2xl border border-white/40">
               <button
                 onClick={() => setActiveTab(activeTab === "docs" ? null : "docs")}
-                className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white transition-all"
+                className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white transition-all group/tab"
               >
                 <div className="flex items-center gap-4">
-                  <div className="p-4 bg-orange-500 text-white rounded-2xl shadow-lg">
+                  <div className="p-4 bg-emerald-600 text-white rounded-2xl shadow-lg transition-transform group-hover/tab:scale-105">
                     <FileText size={28} />
                   </div>
-                  <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic">
+                  <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic group-hover/tab:text-emerald-600 transition-colors">
                     Documents
                   </div>
                 </div>
@@ -180,9 +180,9 @@ export default function Page() {
                   <div className="rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-sm">
                     <button 
                       onClick={() => setOpenSubFolder(!openSubFolder)}
-                      className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors"
+                      className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors group/sub"
                     >
-                      <div className="flex items-center gap-3 text-indigo-700">
+                      <div className="flex items-center gap-3 text-indigo-700 group-hover/sub:text-emerald-600 transition-colors">
                         <CalendarDays size={20} />
                         <span className="font-black uppercase italic tracking-wide text-sm">Meeting Presentations</span>
                       </div>
