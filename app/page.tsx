@@ -34,47 +34,35 @@ export default function Page() {
     { name: "Operational Report", fileName: "operational-report.pdf", size: "1.2 MB" },
   ];
 
-  // CONSOLIDATED PRESENTATIONS FOR A 1-DAY EVENT
+  // UPDATED PRESENTATIONS SUBFOLDER (EXTRACTED FROM image_d67866.png)
   const PRESENTATION_DOCS: ResourceDocument[] = [
-    { name: "Session Remarks: Mr Frikkie De Bruin", fileName: "sessionRemarks.pdf", size: "850 KB" },
-    { name: "SAPU Message of Support", fileName: "sapu_mesOfSupport.pdf", size: "450 KB" },
-    { name: "FEDUSA Message of Support", fileName: "fedusa_mesOfSupport.pdf", size: "450 KB" },
-    { name: "COSATU Message of Support", fileName: "cosatu_mesOfSupport.pdf", size: "450 KB" },
-    { name: "Keynote Address by Hon. Inkosi Mzamo Buthelezi (MP)", fileName: "keynote.pdf", size: "1.2 MB" },
-    { name: "Plenary Session 1: State of the Organisation", fileName: "stateofOrg.pdf", size: "2.1 MB" },
-    { name: "Plenary Session 2: Vision, Mission and Core Values", fileName: "vissionandMission.pdf", size: "1.8 MB" },
-    { name: "Plenary Session 3: Protecting Collective Bargaining", fileName: "protectingCol_Bar.pdf", size: "1.5 MB" },
-    { name: "Report: Mr Frikkie De Bruin", fileName: "protectingReport.pdf", size: "900 KB" },
-    { name: "Labour: Thobja Monyai", fileName: "protectingLabour.pdf", size: "750 KB" },
-    { name: "Employer: Ms Mmapitso Mashele", fileName: "protectingEmployer.pdf", size: "820 KB" },
-    { name: "Plenary Session 4: Embedding Good Governance & Public Service Professionalisation", fileName: "embeddedGoodGovernance.pdf", size: "1.4 MB" },
-    { name: "Labour: Embedding Good Governance & Public Service Professionalisation", fileName: "labourEmbedding.pdf", size: "890 KB" },
-    { name: "Employer: Embedding Good Governance & Public Service Professionalisation", fileName: "employerEmbedding.pdf", size: "910 KB" },
-    { name: "Plenary Session 5: Workforce Well-Being & Transformation Report", fileName: "reportWellBeing.pdf", size: "1.1 MB" },
-    { name: "Employer: Workforce Well-Being & Transformation", fileName: "employerWellbeing.pdf", size: "850 KB" },
-    { name: "Labour: Workforce Well-Being & Transformation", fileName: "labourWellbeing.pdf", size: "780 KB" },
-    { name: "Report by GS: Future of Work, Technology and Digital Transformation", fileName: "gsFutureOfWork.pdf", size: "1.3 MB" },
-    { name: "Labour: Future of Work, Technology and Digital Transformation", fileName: "labFutureOfWork.pdf", size: "880 KB" },
-    { name: "Employer: Future of Work, Technology and Digital Transformation", fileName: "empFutureOfWork.pdf", size: "920 KB" },
+    { name: "AGM Agency Fee Presentation 2026 F", fileName: "agm_agency_fee_presentation_2026_f.pptx", size: "1.2 MB" },
+    { name: "AGM Annual Report Presentation", fileName: "agm_annual_report_presentation.pptx", size: "2.1 MB" },
+    { name: "Vote Weights Presentation - 29th PSCBC AGM (F)", fileName: "vote_weights_presentation_29th_pscbc_agm_f.pptx", size: "1.8 MB" },
   ];
 
-  const DocRow = ({ doc }: { doc: ResourceDocument }) => (
-    <a
-      href={`/docs/${doc.fileName}`}
-      download
-      className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 hover:border-emerald-500 hover:shadow-md transition-all group"
-    >
-      <div className="flex flex-col text-left">
-        <span className="font-bold text-slate-800 text-sm uppercase italic group-hover:text-emerald-600 transition-colors">
-          {doc.name}
-        </span>
-        <span className="text-[10px] text-slate-400 uppercase font-black tracking-widest">
-          PDF • {doc.size}
-        </span>
-      </div>
-      <Download size={18} className="text-emerald-500 group-hover:scale-110 transition-transform" />
-    </a>
-  );
+  const DocRow = ({ doc }: { doc: ResourceDocument }) => {
+    // Detect if file type is pptx or pdf to update card descriptions accurately
+    const isPPTX = doc.fileName.toLowerCase().endsWith(".pptx");
+    
+    return (
+      <a
+        href={`/docs/${doc.fileName}`}
+        download
+        className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 hover:border-emerald-500 hover:shadow-md transition-all group"
+      >
+        <div className="flex flex-col text-left">
+          <span className="font-bold text-slate-800 text-sm uppercase italic group-hover:text-emerald-600 transition-colors">
+            {doc.name}
+          </span>
+          <span className="text-[10px] text-slate-400 uppercase font-black tracking-widest">
+            {isPPTX ? "PPTX" : "PDF"} • {doc.size}
+          </span>
+        </div>
+        <Download size={18} className="text-emerald-500 group-hover:scale-110 transition-transform" />
+      </a>
+    );
+  };
 
   // 1. MAINTENANCE SCREEN CONDITION
   if (IS_MAINTENANCE) {
