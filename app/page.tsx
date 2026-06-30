@@ -27,7 +27,7 @@ export default function Page() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [openSubFolder, setOpenSubFolder] = useState<boolean>(false);
 
-  // CORE DOCUMENTS (CLEANED UP AS REQUESTED)
+  // CORE DOCUMENTS
   const CORE_DOCS: ResourceDocument[] = [
     { name: "Annual Report", fileName: "annualreport.pdf", size: "4.2 MB" },
   ];
@@ -131,10 +131,6 @@ export default function Page() {
               </div>
               <p className="text-slate-700 leading-relaxed font-semibold text-base md:text-lg">
                 Welcome to the 2026 PSCBC Annual General Meeting. Below you can access official documents, as well as view and download pictures taken during the meeting.  
-                <br /><br />
-                <span className="bg-slate-100 p-2 rounded-lg text-sm border-l-4 border-indigo-600">
-                  <strong>Wi-Fi:</strong> NH_Hotel_Guest • <strong>Password:</strong> NH650
-                </span>
               </p>
             </section>
 
