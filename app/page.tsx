@@ -10,6 +10,7 @@ import {
   CalendarDays,
   Image as ImageIcon,
   ExternalLink,
+  ClipboardCheck,
 } from "lucide-react";
 
 interface ResourceDocument {
@@ -139,6 +140,41 @@ export default function Page() {
                 </span>
               </p>
             </section>
+
+            {/* REGISTRATION LINK SECTION */}
+            <div className="overflow-hidden bg-white/95 rounded-[2.5rem] shadow-2xl border border-white/40">
+              <button
+                onClick={() => setActiveTab(activeTab === "registration" ? null : "registration")}
+                className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white transition-all group/tab"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-4 bg-indigo-600 text-white rounded-2xl shadow-lg transition-transform group-hover/tab:scale-105">
+                    <ClipboardCheck size={28} />
+                  </div>
+                  <div className="text-left font-black text-lg md:text-xl text-slate-900 uppercase italic group-hover/tab:text-indigo-600 transition-colors">
+                    Registration Link
+                  </div>
+                </div>
+                <ChevronDown size={28} className={`transition-transform duration-300 ${activeTab === "registration" ? "rotate-180" : ""}`} />
+              </button>
+
+              {activeTab === "registration" && (
+                <div className="p-6 pt-0 space-y-3 bg-slate-50/50">
+                  <a
+                    href="https://forms.office.com/Pages/ResponsePage.aspx?id=R9Ex-ZmmN0uYelXOYgHF-moVzkCG8gZAuduCyamUSGdUOENXQjgxRDFTUlhYMVc4QkU0QVNHSFMySi4u&origin=QRCode"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-indigo-500 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <ClipboardCheck size={20} className="text-indigo-600" />
+                      <span className="font-black text-slate-800 uppercase italic">Open AGM Registration Form</span>
+                    </div>
+                    <ExternalLink size={20} className="text-indigo-500 group-hover:scale-110 transition-transform" />
+                  </a>
+                </div>
+              )}
+            </div>
 
             {/* DOCUMENTS SECTION */}
             <div className="overflow-hidden bg-white/95 rounded-[2.5rem] shadow-2xl border border-white/40">
