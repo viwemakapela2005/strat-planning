@@ -27,12 +27,9 @@ export default function Page() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [openSubFolder, setOpenSubFolder] = useState<boolean>(false);
 
-  // CORE DOCUMENTS (SITTING OUTSIDE SUB-FOLDERS)
+  // CORE DOCUMENTS (CLEANED UP AS REQUESTED)
   const CORE_DOCS: ResourceDocument[] = [
-    { name: "Event Programme", fileName: "programme.pdf", size: "1.5 MB" },
-    { name: "Annual Report 2024/2025", fileName: "annualreport.pdf", size: "4.2 MB" },
-    { name: "Resource Report", fileName: "resourcebook.pdf", size: "2.8 MB" },
-    { name: "Operational Report", fileName: "operational-report.pdf", size: "1.2 MB" },
+    { name: "Annual Report", fileName: "annualreport.pdf", size: "4.2 MB" },
   ];
 
   // UPDATED PRESENTATIONS SUBFOLDER (EXTRACTED FROM image_d67866.png)
