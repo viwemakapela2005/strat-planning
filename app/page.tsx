@@ -76,10 +76,10 @@ export default function Page() {
         <div className="relative z-10 max-w-xl bg-white/95 backdrop-blur-md rounded-[2.5rem] p-8 md:p-12 border border-white/20 shadow-2xl flex flex-col items-center">
           <img src="/logo.png" alt="Logo" className="h-24 md:h-32 w-auto mb-6 object-contain" />
           <h1 className="text-2xl md:text-3xl font-black uppercase italic text-indigo-950 mb-4 tracking-tight">
-            AGM Portal Coming Soon
+            AGM Portal Is Now Closed.
           </h1>
           <p className="text-slate-600 font-semibold text-base md:text-lg leading-relaxed mb-6">
-            The 2026 PSCBC Annual General Meeting resource platform is currently being finalized. Documents and media galleries will be available shortly.
+            The 2026 PSCBC Annual General Meeting is adjourned. Thank you for your attendance and input.
           </p>
           <div className="w-full bg-slate-100 p-3 rounded-2xl text-xs md:text-sm border-l-4 border-indigo-600 text-left font-medium text-slate-700">
             <strong>Wi-Fi Setup Ready:</strong> NH_Hotel_Guest • <strong>Password:</strong> NH650
